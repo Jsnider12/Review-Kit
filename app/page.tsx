@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import QRCode from "qrcode";
 
 type Step = "search" | "manual" | "preview";
@@ -39,7 +39,7 @@ export default function Home() {
   const [color,setColor]=useState("#1f6f5f");
   const [interactions,setInteractions]=useState<Interaction[]>([]);
   const [qr,setQr]=useState("");
-  const [attempted,setAttempted]=useState(false);
+  const [attempted,setAttempted]=useState(false);\n  const cardRef=useRef<HTMLDivElement>(null);
 
   const validReviewUrl=isValidReviewUrl(reviewUrl);
   const canPreview=Boolean(name.trim() && category.trim() && interactions.length && validReviewUrl);
@@ -57,7 +57,7 @@ export default function Home() {
   }
 
   const initials=useMemo(()=>name.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase() || "RK",[name]);
-  const reviewPrompt=promptFor(category);
+  const reviewPrompt=promptFor(category);\n\n  function printReviewCard(){\n    window.print();\n  }
 
   return <main>
     <header className="topbar">
@@ -131,7 +131,7 @@ export default function Home() {
         <div><div className="eyebrow">PERSONALIZED PREVIEW</div><h1>{name}</h1></div>
       </div>
       <div className="previewGrid">
-        <div className="asset" style={{"--brand":color} as React.CSSProperties}>
+        <div className="asset reviewCard" ref={cardRef} style={{"--brand":color} as React.CSSProperties}>
           <div className="logoDot">{initials}</div><div className="assetTitle">{name}</div>
           <h2>{reviewPrompt}</h2><p>We'd really appreciate your feedback.</p>
           {qr && <img src={qr} alt={"QR code linking to the Google review page for "+name}/>}
