@@ -120,3 +120,15 @@
   .reviewCardQr strong{font-size:6.5pt!important}
   .reviewCardQr span{font-size:4.8pt!important;margin-top:.02in!important}
 }
+
+
+/* Review card polish pass */
+.reviewCardBrand{padding-top:clamp(22px,2.7vw,34px);padding-bottom:clamp(22px,2.7vw,34px)}
+.reviewIdentity{align-items:center}
+.reviewCard .logoDot{box-shadow:0 0 0 1px rgba(255,255,255,.25),0 4px 14px rgba(0,0,0,.08)}
+.reviewMessage{padding:6px 0 2px}
+.reviewCard h2{font-size:clamp(24px,2.7vw,34px);max-width:390px}
+.reviewThanks{font-weight:600;letter-spacing:.01em}
+.reviewCardQr{border-left:1px solid #edf0ed}
+.reviewCardQr strong{font-weight:850;letter-spacing:-.01em}
+.reviewCardQr span{letter-spacing:.01em}
