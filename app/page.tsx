@@ -101,7 +101,8 @@ export default function Home() {
     page.drawText("Thank you — your feedback helps our business grow.",{x:15,y:14,size:4.5,font:regular,color:rgb(.9,.96,.94)});
     const qrBytes=Uint8Array.from(atob(qr.split(",")[1]),ch=>ch.charCodeAt(0));
     const qrImage=await pdf.embedPng(qrBytes);
-    page.drawRectangle({x:169.5,y:42.5,width:76,height:76,color:rgb(1,1,1)});\n    page.drawImage(qrImage,{x:173.5,y:46.5,width:68,height:68});
+    page.drawRectangle({x:169.5,y:42.5,width:76,height:76,color:rgb(1,1,1)});
+    page.drawImage(qrImage,{x:173.5,y:46.5,width:68,height:68});
     const scan="Scan to review";
     page.drawText(scan,{x:208-bold.widthOfTextAtSize(scan,6.5)/2,y:39,size:6.5,font:bold,color:rgb(.07,.1,.08)});
     const camera="Open your camera";
