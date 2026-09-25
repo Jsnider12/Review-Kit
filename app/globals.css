@@ -132,3 +132,13 @@
 .reviewCardQr{border-left:1px solid #edf0ed}
 .reviewCardQr strong{font-weight:850;letter-spacing:-.01em}
 .reviewCardQr span{letter-spacing:.01em}
+
+
+/* Keep preview grid structurally stable */
+.previewGrid>.reviewCard{grid-column:1;grid-row:1}
+.previewGrid>.detailsPanel{grid-column:2;grid-row:1}
+.detailsPanel .cardActions{display:flex;grid-column:auto;margin:18px 0 0;padding:0;border:0;border-radius:0;background:transparent;align-items:center}
+@media(max-width:980px){
+  .previewGrid>.reviewCard,.previewGrid>.detailsPanel{grid-column:1;grid-row:auto}
+  .detailsPanel .cardActions{margin-top:18px}
+}
