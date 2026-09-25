@@ -78,16 +78,26 @@ export default function Home() {
     page.drawText(safeName,{x:38,y:118,size:safeName.length>30?6.2:7.2,font:bold,color:rgb(1,1,1),maxWidth:118});
     page.drawText("YOUR FEEDBACK MATTERS",{x:15,y:87,size:4.5,font:bold,color:rgb(.84,.93,.9)});
     const prompt=reviewPrompt;
-    const words=prompt.split(" ");
-    let line1=prompt,line2="";
-    if(prompt.length>22){
-      const mid=Math.ceil(words.length/2);
-      line1=words.slice(0,mid).join(" ");
-      line2=words.slice(mid).join(" ");
+    const promptSize=14;
+    const promptMaxWidth=136;
+    const promptWords=prompt.split(" ");
+    const promptLines:string[]=[];
+    let currentLine="";
+    for(const word of promptWords){
+      const candidate=currentLine ? currentLine+" "+word : word;
+      if(bold.widthOfTextAtSize(candidate,promptSize)<=promptMaxWidth || !currentLine){
+        currentLine=candidate;
+      }else{
+        promptLines.push(currentLine);
+        currentLine=word;
+      }
     }
-    page.drawText(line1,{x:15,y:69,size:15,font:bold,color:rgb(1,1,1)});
-    if(line2) page.drawText(line2,{x:15,y:53,size:15,font:bold,color:rgb(1,1,1)});
-    page.drawText("Share your experience with us on Google.",{x:15,y:line2?42:53,size:6.2,font:regular,color:rgb(1,1,1)});
+    if(currentLine) promptLines.push(currentLine);
+    const visibleLines=promptLines.slice(0,2);
+    const firstY=visibleLines.length>1?72:66;
+    visibleLines.forEach((line,index)=>page.drawText(line,{x:15,y:firstY-index*15,size:promptSize,font:bold,color:rgb(1,1,1)}));
+    const bodyY=visibleLines.length>1?38:49;
+    page.drawText("Share your experience with us on Google.",{x:15,y:bodyY,size:6.2,font:regular,color:rgb(1,1,1)});
     page.drawText("Thank you — your feedback helps our business grow.",{x:15,y:14,size:4.5,font:regular,color:rgb(.9,.96,.94)});
     const qrBytes=Uint8Array.from(atob(qr.split(",")[1]),ch=>ch.charCodeAt(0));
     const qrImage=await pdf.embedPng(qrBytes);
