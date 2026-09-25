@@ -3,25 +3,61 @@ import { useMemo, useState } from "react";
 import QRCode from "qrcode";
 
 type Step = "search" | "manual" | "preview";
+type Interaction = "visit-us" | "we-visit" | "delivery" | "online";
+
+const interactionOptions: {id: Interaction; title: string; detail: string}[] = [
+  {id:"visit-us", title:"Customers visit us", detail:"Restaurant, salon, retail store, office, clinic, or other location"},
+  {id:"we-visit", title:"We visit customers", detail:"Contractor, landscaper, cleaner, mobile service, or other field business"},
+  {id:"delivery", title:"We deliver products", detail:"Local delivery, ecommerce, packaged goods, or takeout"},
+  {id:"online", title:"We work online / remotely", detail:"Consulting, digital services, virtual appointments, or online business"},
+];
+
+function isValidReviewUrl(value:string){
+  try {
+    const url = new URL(value.trim());
+    return url.protocol === "https:" && (url.hostname === "google.com" || url.hostname.endsWith(".google.com") || url.hostname === "g.page" || url.hostname.endsWith(".g.page") || url.hostname === "maps.app.goo.gl");
+  } catch { return false; }
+}
+
+function promptFor(category:string){
+  const c=category.toLowerCase();
+  if(c.includes("restaurant")) return "Enjoyed your visit?";
+  if(c.includes("salon") || c.includes("barber")) return "Love your new look?";
+  if(c.includes("retail") || c.includes("online")) return "Happy with your experience?";
+  if(c.includes("home") || c.includes("contract")) return "Happy with our work?";
+  if(c.includes("health") || c.includes("dental")) return "How was your visit?";
+  return "Happy with your experience?";
+}
 
 export default function Home() {
   const [step,setStep]=useState<Step>("search");
-  const [name,setName]=useState("Bay Area Lawn & Landscape");
-  const [category,setCategory]=useState("Home Service");
-  const [reviewUrl,setReviewUrl]=useState("https://www.google.com/");
+  const [name,setName]=useState("");
+  const [category,setCategory]=useState("");
+  const [reviewUrl,setReviewUrl]=useState("");
+  const [website,setWebsite]=useState("");
+  const [address,setAddress]=useState("");
   const [color,setColor]=useState("#1f6f5f");
+  const [interactions,setInteractions]=useState<Interaction[]>([]);
   const [qr,setQr]=useState("");
+  const [attempted,setAttempted]=useState(false);
 
-  const canPreview = name.trim() && reviewUrl.trim();
+  const validReviewUrl=isValidReviewUrl(reviewUrl);
+  const canPreview=Boolean(name.trim() && category.trim() && interactions.length && validReviewUrl);
+
+  function toggleInteraction(id:Interaction){
+    setInteractions(current=>current.includes(id)?current.filter(x=>x!==id):[...current,id]);
+  }
 
   async function buildPreview(){
+    setAttempted(true);
     if(!canPreview) return;
-    const data = await QRCode.toDataURL(reviewUrl,{width:700,margin:2,errorCorrectionLevel:"H"});
+    const data=await QRCode.toDataURL(reviewUrl.trim(),{width:900,margin:4,errorCorrectionLevel:"H",color:{dark:"#111111",light:"#FFFFFF"}});
     setQr(data);
     setStep("preview");
   }
 
-  const initials = useMemo(()=>name.split(/\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase(),[name]);
+  const initials=useMemo(()=>name.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase() || "RK",[name]);
+  const reviewPrompt=promptFor(category);
 
   return <main>
     <header className="topbar">
@@ -32,76 +68,85 @@ export default function Home() {
     {step==="search" && <section className="hero">
       <div className="eyebrow">PERSONALIZED FOR YOUR BUSINESS</div>
       <h1>Turn happy customers into more Google reviews.</h1>
-      <p className="sub">Create a ready-to-use review kit with QR materials and follow-up messages tailored to how your business actually works.</p>
-
+      <p className="sub">Professional review materials personalized to your business and the way you work with customers.</p>
       <div className="card searchCard">
         <label>Find your business</label>
-        <div className="searchRow">
-          <input placeholder="Business name or address" disabled />
-          <button disabled>Search</button>
-        </div>
-        <p className="helper">Business search will be connected next. You can already use the manual setup below.</p>
+        <div className="searchRow"><input placeholder="Business name or address" disabled/><button disabled>Search</button></div>
+        <p className="helper">Business search is coming next. Manual setup is fully supported and will always remain available.</p>
         <button className="linkButton" onClick={()=>setStep("manual")}>Can't find your business? Enter it manually →</button>
       </div>
-
       <div className="trustGrid">
-        <div><strong>1 minute</strong><span>to set up</span></div>
-        <div><strong>No login</strong><span>needed to start</span></div>
-        <div><strong>Instant</strong><span>personalized preview</span></div>
+        <div><strong>No design work</strong><span>we personalize it</span></div>
+        <div><strong>No subscription</strong><span>one-time purchase</span></div>
+        <div><strong>Preview first</strong><span>see it before buying</span></div>
       </div>
     </section>}
 
     {step==="manual" && <section className="builderWrap">
       <div className="builder">
         <button className="back" onClick={()=>setStep("search")}>← Back</button>
-        <div className="eyebrow">MANUAL BUSINESS SETUP</div>
+        <div className="eyebrow">BUSINESS SETUP</div>
         <h1>Tell us about your business.</h1>
-        <p className="sub small">We'll use these details to personalize your review materials.</p>
+        <p className="sub small">Required fields are marked *. Optional details improve personalization but will never block your kit.</p>
 
         <div className="formGrid">
-          <label>Business name<input value={name} onChange={e=>setName(e.target.value)} /></label>
-          <label>Business category
+          <label>Business name *<input value={name} maxLength={120} onChange={e=>setName(e.target.value)} placeholder="Bay Area Lawn & Landscape"/></label>
+          <label>Business category *
             <select value={category} onChange={e=>setCategory(e.target.value)}>
-              <option>Home Service</option><option>Restaurant</option><option>Salon / Barber</option><option>Retail</option><option>Professional Service</option><option>Online Business</option><option>Other</option>
+              <option value="">Choose a category</option><option>Home Service / Contractor</option><option>Restaurant / Food</option><option>Salon / Barber / Beauty</option><option>Retail</option><option>Healthcare / Dental</option><option>Professional Service</option><option>Online Business</option><option>Other</option>
             </select>
           </label>
-          <label className="full">Google review link<input value={reviewUrl} onChange={e=>setReviewUrl(e.target.value)} placeholder="https://g.page/r/.../review" /></label>
-          <label>Brand color<input type="color" value={color} onChange={e=>setColor(e.target.value)} /></label>
-          <label>Logo <input type="file" disabled /><span className="helper">Logo upload comes next. Text branding works for now.</span></label>
+
+          <fieldset className="full interactionField">
+            <legend>How do you work with your customers? *</legend>
+            <p className="helper">Choose all that apply. This determines which materials go into your kit.</p>
+            <div className="interactionGrid">
+              {interactionOptions.map(option=><button type="button" key={option.id} className={interactions.includes(option.id)?"interaction selected":"interaction"} onClick={()=>toggleInteraction(option.id)} aria-pressed={interactions.includes(option.id)}>
+                <span className="check">{interactions.includes(option.id)?"✓":""}</span><span><strong>{option.title}</strong><small>{option.detail}</small></span>
+              </button>)}
+            </div>
+          </fieldset>
+
+          <label className="full">Google review link *
+            <input value={reviewUrl} onChange={e=>{setReviewUrl(e.target.value);setAttempted(false)}} placeholder="Paste your Google review link"/>
+            <span className="helper">This is the destination used by every QR code in your kit.</span>
+            {reviewUrl && !validReviewUrl && <span className="error">Enter a valid Google review link (Google, g.page, or Google Maps).</span>}
+            <button type="button" className="helpLink">How do I find my Google review link?</button>
+          </label>
+
+          <label>Website <span className="optional">Optional</span><input value={website} onChange={e=>setWebsite(e.target.value)} placeholder="yourbusiness.com"/></label>
+          <label>Location / address <span className="optional">Optional</span><input value={address} onChange={e=>setAddress(e.target.value)} placeholder="City, State or full address"/></label>
+          <label>Brand color <span className="optional">Optional</span><div className="colorRow"><input className="colorInput" type="color" value={color} onChange={e=>setColor(e.target.value)}/><span>{color.toUpperCase()}</span></div></label>
+          <label>Logo <span className="optional">Optional</span><input type="file" accept="image/png,image/jpeg,image/webp" disabled/><span className="helper">Logo upload is added after this setup flow is verified. Your business name works as clean text branding without one.</span></label>
         </div>
 
-        <button className="primary" onClick={buildPreview} disabled={!canPreview}>Create preview</button>
+        {attempted && !canPreview && <div className="formError">Complete the required fields above before creating your preview.</div>}
+        <button className="primary" onClick={buildPreview}>Create my preview →</button>
       </div>
     </section>}
 
     {step==="preview" && <section className="previewWrap">
       <div className="previewHead">
         <button className="back" onClick={()=>setStep("manual")}>← Edit details</button>
-        <div>
-          <div className="eyebrow">YOUR LIVE PREVIEW</div>
-          <h1>{name}</h1>
-        </div>
+        <div><div className="eyebrow">PERSONALIZED PREVIEW</div><h1>{name}</h1></div>
       </div>
-
       <div className="previewGrid">
         <div className="asset" style={{"--brand":color} as React.CSSProperties}>
-          <div className="logoDot">{initials}</div>
-          <div className="assetTitle">{name}</div>
-          <h2>Happy with our service?</h2>
-          <p>We'd really appreciate your feedback.</p>
-          {qr && <img src={qr} alt="QR code preview" />}
+          <div className="logoDot">{initials}</div><div className="assetTitle">{name}</div>
+          <h2>{reviewPrompt}</h2><p>We'd really appreciate your feedback.</p>
+          {qr && <img src={qr} alt={"QR code linking to the Google review page for "+name}/>}
           <div className="scan">Scan to leave us a Google review</div>
         </div>
-
         <div className="detailsPanel">
-          <h3>What this proves</h3>
-          <ul>
-            <li>Your business details flow into the design.</li>
-            <li>Your review link becomes a real scannable QR code.</li>
-            <li>The output adapts to your branding.</li>
-            <li>Manual entry works even before business search is connected.</li>
-          </ul>
-          <div className="nextBox"><strong>Next build step</strong><br/>Add business search, logo upload, and downloadable PNG/PDF assets.</div>
+          <div className="eyebrow">YOUR KIT WILL ADAPT TO YOU</div>
+          <h3>Business setup confirmed</h3>
+          <dl className="summary">
+            <div><dt>Category</dt><dd>{category}</dd></div>
+            <div><dt>Customer interaction</dt><dd>{interactions.map(id=>interactionOptions.find(x=>x.id===id)?.title).join(", ")}</dd></div>
+            {website && <div><dt>Website</dt><dd>{website}</dd></div>}
+            {address && <div><dt>Location</dt><dd>{address}</dd></div>}
+          </dl>
+          <div className="nextBox"><strong>Phase 1 preview</strong><br/>The QR is generated from your validated Google destination and the wording adapts to the business category. Downloadable production assets come after this setup flow passes testing.</div>
         </div>
       </div>
     </section>}
