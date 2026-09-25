@@ -155,10 +155,6 @@ export default function Home() {
             <span>Open your camera</span>
           </div>
         </div>
-        <div className="cardActions">
-          <div><strong>Review Card · 3.5 × 2 in</strong><span>Print-ready master preview</span></div>
-          <button className="primary compact" onClick={printReviewCard}>Print / Save PDF</button>
-        </div>
         <div className="detailsPanel">
           <div className="eyebrow">YOUR KIT WILL ADAPT TO YOU</div>
           <h3>Business setup confirmed</h3>
@@ -169,6 +165,10 @@ export default function Home() {
             {address && <div><dt>Location</dt><dd>{address}</dd></div>}
           </dl>
           <div className="nextBox"><strong>Your review card is ready to test</strong><br/>Your QR code links directly to the Google review destination you provided. Review the design, then print or save the card to test the final size.</div>
+          <div className="cardActions">
+            <div><strong>Review Card · 3.5 × 2 in</strong><span>Print-ready master preview</span></div>
+            <button className="primary compact" onClick={printReviewCard}>Print / Save PDF</button>
+          </div>
         </div>
       </div>
     </section>}
