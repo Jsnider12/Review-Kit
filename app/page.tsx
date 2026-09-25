@@ -136,11 +136,24 @@ export default function Home() {
         <div><div className="eyebrow">PERSONALIZED PREVIEW</div><h1>{name}</h1></div>
       </div>
       <div className="previewGrid">
-        <div className="asset reviewCard" ref={cardRef} style={{"--brand":color} as React.CSSProperties}>
-          <div className="logoDot">{initials}</div><div className="assetTitle">{name}</div>
-          <h2>{reviewPrompt}</h2><p>We'd really appreciate your feedback.</p>
-          {qr && <img src={qr} alt={"QR code linking to the Google review page for "+name}/>}
-          <div className="scan">Scan to leave us a Google review</div>
+        <div className="reviewCard" ref={cardRef} style={{"--brand":color} as React.CSSProperties}>
+          <div className="reviewCardBrand">
+            <div className="reviewIdentity">
+              <div className="logoDot">{initials}</div>
+              <div className="assetTitle">{name}</div>
+            </div>
+            <div className="reviewMessage">
+              <div className="reviewKicker">YOUR FEEDBACK MATTERS</div>
+              <h2>{reviewPrompt}</h2>
+              <p>Share your experience with us on Google.</p>
+            </div>
+            <div className="reviewThanks">Thank you for supporting our business.</div>
+          </div>
+          <div className="reviewCardQr">
+            {qr && <img src={qr} alt={"QR code linking to the Google review page for "+name}/>}
+            <strong>Scan to review</strong>
+            <span>Open your camera</span>
+          </div>
         </div>
         <div className="detailsPanel">
           <div className="eyebrow">YOUR KIT WILL ADAPT TO YOU</div>
