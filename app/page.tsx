@@ -39,7 +39,8 @@ export default function Home() {
   const [color,setColor]=useState("#1f6f5f");
   const [interactions,setInteractions]=useState<Interaction[]>([]);
   const [qr,setQr]=useState("");
-  const [attempted,setAttempted]=useState(false);\n  const cardRef=useRef<HTMLDivElement>(null);
+  const [attempted,setAttempted]=useState(false);
+  const cardRef=useRef<HTMLDivElement>(null);
 
   const validReviewUrl=isValidReviewUrl(reviewUrl);
   const canPreview=Boolean(name.trim() && category.trim() && interactions.length && validReviewUrl);
@@ -57,7 +58,11 @@ export default function Home() {
   }
 
   const initials=useMemo(()=>name.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase() || "RK",[name]);
-  const reviewPrompt=promptFor(category);\n\n  function printReviewCard(){\n    window.print();\n  }
+  const reviewPrompt=promptFor(category);
+
+  function printReviewCard(){
+    window.print();
+  }
 
   return <main>
     <header className="topbar">
