@@ -56,3 +56,67 @@
   .cardActions{align-items:flex-start;flex-direction:column}
   .primary.compact{width:100%}
 }
+
+
+/* Phase 2 review card redesign */
+.reviewCard{
+  --brand:#1f6f5f;
+  width:100%;
+  aspect-ratio:1.75/1;
+  min-height:0!important;
+  padding:0!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1.45fr) minmax(150px,.72fr);
+  overflow:hidden;
+  border:1px solid #dfe5df;
+  border-top:0!important;
+  border-radius:24px;
+  background:#fff;
+  box-shadow:0 22px 55px rgba(34,62,45,.12);
+  text-align:left;
+}
+.reviewCardBrand{
+  min-width:0;
+  padding:clamp(24px,3vw,38px);
+  background:var(--brand);
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.reviewIdentity{display:flex;align-items:center;gap:12px;min-width:0}
+.reviewCard .logoDot{width:42px;height:42px;margin:0;background:#fff;color:var(--brand);font-size:13px;flex:0 0 auto}
+.reviewCard .assetTitle{font-size:clamp(13px,1.45vw,17px);line-height:1.15;color:#fff;overflow-wrap:anywhere}
+.reviewMessage{padding:10px 0}
+.reviewKicker{font-size:9px;letter-spacing:.14em;font-weight:900;opacity:.8;margin-bottom:8px}
+.reviewCard h2{font-size:clamp(25px,3vw,38px);line-height:1;margin:0 0 9px;color:#fff;letter-spacing:-.025em}
+.reviewCard p{font-size:clamp(11px,1.25vw,14px);line-height:1.35;margin:0;color:rgba(255,255,255,.88)}
+.reviewThanks{font-size:10px;line-height:1.25;color:rgba(255,255,255,.72)}
+.reviewCardQr{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:clamp(16px,2vw,24px);background:#fff;color:#17201b}
+.reviewCardQr img{display:block;width:min(100%,190px)!important;height:auto!important;aspect-ratio:1;margin:0 0 10px!important;object-fit:contain}
+.reviewCardQr strong{font-size:13px;line-height:1.1}
+.reviewCardQr span{font-size:9px;color:#7a847d;margin-top:4px}
+
+@media(max-width:560px){
+  .reviewCard{grid-template-columns:minmax(0,1.35fr) minmax(112px,.65fr);border-radius:18px}
+  .reviewCardBrand{padding:18px}
+  .reviewCard .logoDot{width:34px;height:34px;font-size:11px}
+  .reviewCard h2{font-size:23px}
+  .reviewCardQr{padding:12px}
+  .reviewThanks{display:none}
+}
+
+@media print{
+  .reviewCard{display:grid!important;grid-template-columns:2.27in 1.23in!important}
+  .reviewCardBrand{padding:.16in .17in!important}
+  .reviewCard .logoDot{width:.28in!important;height:.28in!important;font-size:7.5pt!important}
+  .reviewCard .assetTitle{font-size:7.8pt!important;line-height:1.1!important}
+  .reviewKicker{font-size:4.8pt!important;margin-bottom:.035in!important}
+  .reviewCard h2{font-size:14pt!important;line-height:1!important;margin:0 0 .04in!important}
+  .reviewCard p{font-size:6.5pt!important;line-height:1.2!important}
+  .reviewThanks{font-size:5.2pt!important}
+  .reviewCardQr{padding:.12in!important}
+  .reviewCardQr img{width:.9in!important;height:.9in!important;margin:0 0 .045in!important}
+  .reviewCardQr strong{font-size:6.5pt!important}
+  .reviewCardQr span{font-size:4.8pt!important;margin-top:.02in!important}
+}
