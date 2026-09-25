@@ -147,7 +147,7 @@ export default function Home() {
               <h2>{reviewPrompt}</h2>
               <p>Share your experience with us on Google.</p>
             </div>
-            <div className="reviewThanks">Thank you for supporting our business.</div>
+            <div className="reviewThanks">Thank you — your feedback helps our business grow.</div>
           </div>
           <div className="reviewCardQr">
             {qr && <img src={qr} alt={"QR code linking to the Google review page for "+name}/>}
@@ -164,7 +164,7 @@ export default function Home() {
             {website && <div><dt>Website</dt><dd>{website}</dd></div>}
             {address && <div><dt>Location</dt><dd>{address}</dd></div>}
           </dl>
-          <div className="nextBox"><strong>Phase 1 preview</strong><br/>The QR is generated from your validated Google destination and the wording adapts to the business category. Downloadable production assets come after this setup flow passes testing.</div>
+          <div className="nextBox"><strong>Your review card is ready to test</strong><br/>Your QR code links directly to the Google review destination you provided. Review the design, then print or save the card to test the final size.</div>
         </div>
       </div>
     </section>}
