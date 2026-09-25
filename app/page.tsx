@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useRef, useState } from "react";
 import QRCode from "qrcode";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 
 type Step = "search" | "manual" | "preview";
 type Interaction = "visit-us" | "we-visit" | "delivery" | "online";
@@ -60,8 +61,49 @@ export default function Home() {
   const initials=useMemo(()=>name.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase() || "RK",[name]);
   const reviewPrompt=promptFor(category);
 
-  function printReviewCard(){
-    window.print();
+  async function downloadReviewCard(){
+    if(!qr) return;
+    const pdf=await PDFDocument.create();
+    const page=pdf.addPage([252,144]);
+    const regular=await pdf.embedFont(StandardFonts.Helvetica);
+    const bold=await pdf.embedFont(StandardFonts.HelveticaBold);
+    const hex=color.replace("#","");
+    const brand=rgb(parseInt(hex.slice(0,2),16)/255,parseInt(hex.slice(2,4),16)/255,parseInt(hex.slice(4,6),16)/255);
+    page.drawRectangle({x:0,y:0,width:163.5,height:144,color:brand});
+    page.drawRectangle({x:163.5,y:0,width:88.5,height:144,color:rgb(1,1,1)});
+    page.drawCircle({x:24,y:121,size:10,color:rgb(1,1,1)});
+    const mark=initials.slice(0,2);
+    page.drawText(mark,{x:24-bold.widthOfTextAtSize(mark,6)/2,y:119,size:6,font:bold,color:brand});
+    const safeName=name.trim().slice(0,46);
+    page.drawText(safeName,{x:38,y:118,size:safeName.length>30?6.2:7.2,font:bold,color:rgb(1,1,1),maxWidth:118});
+    page.drawText("YOUR FEEDBACK MATTERS",{x:15,y:87,size:4.5,font:bold,color:rgb(.84,.93,.9)});
+    const prompt=reviewPrompt;
+    const words=prompt.split(" ");
+    let line1=prompt,line2="";
+    if(prompt.length>22){
+      const mid=Math.ceil(words.length/2);
+      line1=words.slice(0,mid).join(" ");
+      line2=words.slice(mid).join(" ");
+    }
+    page.drawText(line1,{x:15,y:69,size:15,font:bold,color:rgb(1,1,1)});
+    if(line2) page.drawText(line2,{x:15,y:53,size:15,font:bold,color:rgb(1,1,1)});
+    page.drawText("Share your experience with us on Google.",{x:15,y:line2?42:53,size:6.2,font:regular,color:rgb(1,1,1)});
+    page.drawText("Thank you — your feedback helps our business grow.",{x:15,y:14,size:4.5,font:regular,color:rgb(.9,.96,.94)});
+    const qrBytes=Uint8Array.from(atob(qr.split(",")[1]),ch=>ch.charCodeAt(0));
+    const qrImage=await pdf.embedPng(qrBytes);
+    page.drawImage(qrImage,{x:177,y:50,width:62,height:62});
+    const scan="Scan to review";
+    page.drawText(scan,{x:208-bold.widthOfTextAtSize(scan,6.5)/2,y:39,size:6.5,font:bold,color:rgb(.07,.1,.08)});
+    const camera="Open your camera";
+    page.drawText(camera,{x:208-regular.widthOfTextAtSize(camera,4.5)/2,y:30,size:4.5,font:regular,color:rgb(.42,.46,.43)});
+    const bytes=await pdf.save();
+    const blob=new Blob([new Uint8Array(bytes)],{type:"application/pdf"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url;
+    a.download=(name.trim().replace(/[^a-z0-9]+/gi,"-").replace(/^-|-$/g,"")||"business")+"-review-card.pdf";
+    a.click();
+    URL.revokeObjectURL(url);
   }
 
   return <main>
@@ -166,8 +208,8 @@ export default function Home() {
           </dl>
           <div className="nextBox"><strong>Your review card is ready to test</strong><br/>Your QR code links directly to the Google review destination you provided. Review the design, then print or save the card to test the final size.</div>
           <div className="cardActions">
-            <div><strong>Review Card · 3.5 × 2 in</strong><span>Print-ready master preview</span></div>
-            <button className="primary compact" onClick={printReviewCard}>Print / Save PDF</button>
+            <div><strong>Review Card · 3.5 × 2 in</strong><span>Exact 3.5 × 2 in PDF</span></div>
+            <button className="primary compact" onClick={downloadReviewCard}>Download PDF</button>
           </div>
         </div>
       </div>
