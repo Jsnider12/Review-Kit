@@ -23,3 +23,36 @@
   .reviewCard img{width:.68in!important;height:.68in!important;margin:.035in auto .01in!important}
   .reviewCard .scan{font-size:6.2pt!important;line-height:1!important}
 }
+
+
+/* Phase 2 preview layout hardening */
+.previewWrap{max-width:1180px;overflow:visible}
+.previewHead{min-width:0}
+.previewHead>div{min-width:0;flex:1}
+.previewHead h1{overflow-wrap:anywhere}
+.previewGrid{grid-template-columns:minmax(0,1.12fr) minmax(300px,.88fr);gap:32px;width:100%}
+.previewGrid>*{min-width:0}
+.reviewCard{width:100%;min-height:0!important;aspect-ratio:1.75/1;padding:clamp(24px,3vw,42px);display:flex;flex-direction:column;justify-content:center}
+.reviewCard .logoDot{width:54px;height:54px;margin-bottom:10px;flex:0 0 auto}
+.reviewCard .assetTitle{font-size:clamp(14px,1.7vw,18px);line-height:1.15;overflow-wrap:anywhere}
+.reviewCard h2{font-size:clamp(26px,3vw,38px);margin:clamp(20px,4vw,42px) 0 8px}
+.reviewCard p{margin:0}
+.reviewCard img{width:clamp(130px,18vw,190px);height:auto;aspect-ratio:1;margin:clamp(14px,2.4vw,24px) auto 10px}
+.detailsPanel{min-width:0}
+.summary dd{overflow-wrap:anywhere}
+
+@media(max-width:980px){
+  .previewGrid{grid-template-columns:1fr}
+  .detailsPanel{grid-row:auto}
+  .cardActions{grid-column:1;margin-top:-12px}
+  .reviewCard{max-width:680px;margin:0 auto}
+}
+@media(max-width:560px){
+  .previewWrap{padding-left:16px;padding-right:16px}
+  .previewHead h1{font-size:32px}
+  .reviewCard{padding:22px 18px;border-radius:20px}
+  .reviewCard h2{font-size:25px;margin:18px 0 6px}
+  .reviewCard img{width:128px;margin:12px auto 8px}
+  .cardActions{align-items:flex-start;flex-direction:column}
+  .primary.compact{width:100%}
+}
