@@ -1,229 +1,44 @@
 "use client";
-import { useMemo, useRef, useState } from "react";
+import {useMemo,useState} from "react";
 import QRCode from "qrcode";
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import JSZip from "jszip";
+import {PDFDocument,StandardFonts,rgb} from "pdf-lib";
 
-type Step = "search" | "manual" | "preview";
-type Interaction = "visit-us" | "we-visit" | "delivery" | "online";
+type Step="start"|"setup"|"preview";
+type Interaction="visit-us"|"we-visit"|"delivery"|"online";
+const interactions:{id:Interaction;title:string;detail:string}[]=[
+{id:"visit-us",title:"Customers visit us",detail:"Restaurant, salon, retail, office or clinic"},
+{id:"we-visit",title:"We visit customers",detail:"Contractor, landscaper, cleaner or mobile service"},
+{id:"delivery",title:"We deliver products",detail:"Delivery, ecommerce, packaged goods or takeout"},
+{id:"online",title:"We work online / remotely",detail:"Consulting, digital services or virtual appointments"}];
+const cats=["Home Service / Contractor","Restaurant / Food","Salon / Barber / Beauty","Retail","Healthcare / Dental","Professional Service","Online Business","Other"];
+function validGoogle(v:string){try{const u=new URL(v.trim());return u.protocol==="https:"&&(u.hostname==="google.com"||u.hostname.endsWith(".google.com")||u.hostname==="g.page"||u.hostname.endsWith(".g.page")||u.hostname==="maps.app.goo.gl")}catch{return false}}
+function promptFor(c:string){c=c.toLowerCase();if(c.includes("restaurant"))return"Enjoyed your visit?";if(c.includes("salon")||c.includes("barber"))return"Love your new look?";if(c.includes("home")||c.includes("contract"))return"Happy with our work?";if(c.includes("health")||c.includes("dental"))return"How was your visit?";return"Happy with your experience?"}
+function slug(v:string){return v.trim().replace(/[^a-z0-9]+/gi,"-").replace(/^-|-$/g,"")||"business"}
+function download(bytes:Uint8Array|Blob,name:string,type="application/pdf"){const blob=bytes instanceof Blob?bytes:new Blob([new Uint8Array(bytes)],{type});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function hexRgb(hex:string){hex=hex.replace("#","");return rgb(parseInt(hex.slice(0,2),16)/255,parseInt(hex.slice(2,4),16)/255,parseInt(hex.slice(4,6),16)/255)}
+async function pngBytes(data:string){return Uint8Array.from(atob(data.split(",")[1]),c=>c.charCodeAt(0))}
+function wrap(text:string,font:any,size:number,max:number){const words=text.split(" ");const lines:string[]=[];let line="";for(const word of words){const n=line?line+" "+word:word;if(font.widthOfTextAtSize(n,size)<=max||!line)line=n;else{lines.push(line);line=word}}if(line)lines.push(line);return lines}
 
-const interactionOptions: {id: Interaction; title: string; detail: string}[] = [
-  {id:"visit-us", title:"Customers visit us", detail:"Restaurant, salon, retail store, office, clinic, or other location"},
-  {id:"we-visit", title:"We visit customers", detail:"Contractor, landscaper, cleaner, mobile service, or other field business"},
-  {id:"delivery", title:"We deliver products", detail:"Local delivery, ecommerce, packaged goods, or takeout"},
-  {id:"online", title:"We work online / remotely", detail:"Consulting, digital services, virtual appointments, or online business"},
-];
+export default function Home(){
+const[step,setStep]=useState<Step>("start"),[name,setName]=useState(""),[category,setCategory]=useState(""),[reviewUrl,setReviewUrl]=useState(""),[website,setWebsite]=useState(""),[address,setAddress]=useState(""),[color,setColor]=useState("#1f6f5f"),[modes,setModes]=useState<Interaction[]>([]),[qr,setQr]=useState(""),[logo,setLogo]=useState(""),[attempted,setAttempted]=useState(false),[busy,setBusy]=useState(false);
+const initials=useMemo(()=>name.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase()||"RK",[name]);
+const prompt=promptFor(category),ready=!!(name.trim()&&category&&modes.length&&validGoogle(reviewUrl));
+function toggle(id:Interaction){setModes(x=>x.includes(id)?x.filter(v=>v!==id):[...x,id])}
+function loadLogo(file?:File){if(!file)return;if(file.size>4_000_000)return alert("Please use a logo under 4 MB.");const r=new FileReader();r.onload=()=>setLogo(String(r.result));r.readAsDataURL(file)}
+async function makePreview(){setAttempted(true);if(!ready)return;setQr(await QRCode.toDataURL(reviewUrl.trim(),{width:1400,margin:4,errorCorrectionLevel:"M",color:{dark:"#000000",light:"#FFFFFF"}}));setStep("preview")}
+async function newPdf(w:number,h:number){const pdf=await PDFDocument.create();const page=pdf.addPage([w,h]);return{pdf,page,regular:await pdf.embedFont(StandardFonts.Helvetica),bold:await pdf.embedFont(StandardFonts.HelveticaBold)}}
+async function drawLogo(pdf:PDFDocument,page:any,x:number,y:number,w:number,h:number){if(!logo)return false;try{const b=await pngBytes(logo);const img=logo.startsWith("data:image/png")?await pdf.embedPng(b):await pdf.embedJpg(b);const s=img.scaleToFit(w,h);page.drawImage(img,{x:x+(w-s.width)/2,y:y+(h-s.height)/2,width:s.width,height:s.height});return true}catch{return false}}
+async function cardPdf(){const{pdf,page,regular,bold}=await newPdf(252,144);const brand=hexRgb(color);page.drawRectangle({x:0,y:0,width:160,height:144,color:brand});page.drawRectangle({x:160,y:0,width:92,height:144,color:rgb(1,1,1)});if(!(await drawLogo(pdf,page,14,112,24,20))){page.drawCircle({x:25,y:122,size:10,color:rgb(1,1,1)});page.drawText(initials,{x:25-bold.widthOfTextAtSize(initials,6)/2,y:120,size:6,font:bold,color:brand})}const n=name.trim().slice(0,50);page.drawText(n,{x:42,y:119,size:n.length>30?5.8:7,font:bold,color:rgb(1,1,1),maxWidth:108});page.drawText("YOUR FEEDBACK MATTERS",{x:14,y:88,size:4.5,font:bold,color:rgb(.86,.95,.92)});const lines=wrap(prompt,bold,13.5,132).slice(0,2);lines.forEach((l,i)=>page.drawText(l,{x:14,y:70-i*14,size:13.5,font:bold,color:rgb(1,1,1)}));page.drawText("Share your experience with us on Google.",{x:14,y:lines.length>1?39:51,size:6,font:regular,color:rgb(1,1,1)});page.drawText("Thank you — your feedback helps our business grow.",{x:14,y:13,size:4.3,font:regular,color:rgb(.9,.97,.95)});const qi=await pdf.embedPng(await pngBytes(qr));page.drawImage(qi,{x:171,y:49,width:70,height:70});const s="Scan to review";page.drawText(s,{x:206-bold.widthOfTextAtSize(s,6.3)/2,y:38,size:6.3,font:bold,color:rgb(.08,.1,.09)});return pdf.save()}
+async function signPdf(w:number,h:number,title:string,sub:string){const{pdf,page,regular,bold}=await newPdf(w,h);const brand=hexRgb(color);page.drawRectangle({x:0,y:0,width:w,height:h,color:rgb(1,1,1)});page.drawRectangle({x:0,y:h-18,width:w,height:18,color:brand});if(!(await drawLogo(pdf,page,w*.12,h-78,w*.76,42))){page.drawText(name,{x:28,y:h-58,size:Math.min(20,Math.max(11,240/name.length)),font:bold,color:rgb(.08,.1,.09),maxWidth:w-56})}const tl=wrap(title,bold,Math.min(28,w/14),w-56).slice(0,2);tl.forEach((l,i)=>page.drawText(l,{x:28,y:h-112-i*30,size:Math.min(28,w/14),font:bold,color:rgb(.08,.1,.09)}));page.drawText(sub,{x:28,y:h-170,size:10,font:regular,color:rgb(.35,.39,.36),maxWidth:w-56});const qi=await pdf.embedPng(await pngBytes(qr));const q=Math.min(w*.42,h*.38);page.drawImage(qi,{x:(w-q)/2,y:55,width:q,height:q});const s="SCAN TO LEAVE A GOOGLE REVIEW";page.drawText(s,{x:(w-bold.widthOfTextAtSize(s,9))/2,y:35,size:9,font:bold,color:brand});return pdf.save()}
+async function letterSheet(){const{pdf,page,bold}=await newPdf(612,792);const bytes=await cardPdf();const src=await PDFDocument.load(bytes);const embedded=await pdf.embedPage(src.getPage(0));const scale=1.55,w=252*scale,h=144*scale;[[40,520],[40,270]].forEach(([x,y])=>page.drawPage(embedded,{x,y,width:w,height:h}));page.drawText("Print at 100% • Cut along card edges",{x:40,y:30,size:9,font:bold,color:rgb(.35,.39,.36)});return pdf.save()}
+async function phonePng(){const canvas=document.createElement("canvas");canvas.width=1080;canvas.height=1920;const x=canvas.getContext("2d")!;x.fillStyle=color;x.fillRect(0,0,1080,1920);x.fillStyle="#fff";x.textAlign="center";x.font="700 48px Arial";x.fillText(name,540,230,900);x.font="800 86px Arial";const lines=prompt.length>22?[prompt.slice(0,prompt.lastIndexOf(" ",22)),prompt.slice(prompt.lastIndexOf(" ",22)+1)]:[prompt];lines.forEach((l,i)=>x.fillText(l,540,500+i*95,920));x.font="36px Arial";x.fillText("Share your experience with us on Google.",540,720,900);const im=new Image();await new Promise<void>((res,rej)=>{im.onload=()=>res();im.onerror=rej;im.src=qr});x.fillStyle="#fff";x.fillRect(285,820,510,510);x.drawImage(im,315,850,450,450);x.font="700 38px Arial";x.fillText("Scan to review",540,1400);return new Promise<Blob>((res,rej)=>canvas.toBlob(b=>b?res(b):rej(),"image/png"))}
+function templates(){return `REVIEW REQUEST TEMPLATES — ${name}\n\nTEXT MESSAGE\nHi [First name] — thanks for choosing ${name}. If you have a moment, we'd appreciate your feedback on Google: ${reviewUrl}\n\nEMAIL\nSubject: How was your experience with ${name}?\n\nHi [First name],\nThank you for choosing ${name}. Your feedback helps us improve and helps other customers find us. If you'd like to share your experience, you can leave a Google review here:\n${reviewUrl}\n\nThank you,\n${name}\n\nFOLLOW-UP\nHi [First name] — just a quick follow-up from ${name}. If you'd like to share feedback about your experience, here's our Google review link: ${reviewUrl}\n\nINVOICE / RECEIPT LINE\nWe value your feedback. Scan our review QR or visit: ${reviewUrl}\n`}
+async function guidePdf(){const{pdf,page,regular,bold}=await newPdf(612,792);const brand=hexRgb(color);page.drawRectangle({x:0,y:720,width:612,height:72,color:brand});page.drawText("YOUR REVIEW KIT",{x:42,y:746,size:22,font:bold,color:rgb(1,1,1)});page.drawText(name,{x:42,y:695,size:18,font:bold,color:rgb(.08,.1,.09),maxWidth:520});const rows=[["1. Review Card","Hand it to customers after a completed visit, service, or purchase."],["2. Print Sheet","Print multiple review cards on one US Letter page."],["3. Phone Graphic","Share digitally or display on a phone/tablet."],["4. QR Code","Use anywhere you need a direct path to your Google review page."],["5. Request Templates","Copy and personalize the included text and email messages."],["Important","Ask for honest feedback. Do not offer rewards or only ask customers likely to leave positive reviews."]];let y=640;for(const[r,d]of rows){page.drawText(r,{x:42,y,size:13,font:bold,color:brand});for(const line of wrap(d,regular,10,500)){y-=15;page.drawText(line,{x:42,y,size:10,font:regular,color:rgb(.25,.29,.26)})}y-=28}return pdf.save()}
+async function buildKit(){if(!qr)return;setBusy(true);try{const zip=new JSZip(),base=slug(name);zip.file(base+"-review-card-3.5x2.pdf",await cardPdf());zip.file(base+"-print-sheet-letter.pdf",await letterSheet());zip.file(base+"-phone-review-1080x1920.png",await phonePng());zip.file(base+"-qr-code.png",await pngBytes(qr));zip.file(base+"-review-request-templates.txt",templates());zip.file(base+"-start-here.pdf",await guidePdf());if(modes.includes("visit-us"))zip.file(base+"-counter-sign-5x7.pdf",await signPdf(360,504,prompt,"Scan the QR code to share your experience."));if(modes.includes("we-visit"))zip.file(base+"-leave-behind-4x6.pdf",await signPdf(288,432,prompt,"Thanks for trusting us with your project."));if(modes.includes("delivery"))zip.file(base+"-package-insert-4x6.pdf",await signPdf(288,432,"Thanks for your order","We'd love to hear about your experience."));if(modes.includes("online"))zip.file(base+"-digital-review-card.pdf",await signPdf(432,288,prompt,"Your feedback helps our business grow."));const blob=await zip.generateAsync({type:"blob"});download(blob,base+"-review-kit.zip","application/zip")}finally{setBusy(false)}}
 
-function isValidReviewUrl(value:string){
-  try {
-    const url = new URL(value.trim());
-    return url.protocol === "https:" && (url.hostname === "google.com" || url.hostname.endsWith(".google.com") || url.hostname === "g.page" || url.hostname.endsWith(".g.page") || url.hostname === "maps.app.goo.gl");
-  } catch { return false; }
-}
-
-function promptFor(category:string){
-  const c=category.toLowerCase();
-  if(c.includes("restaurant")) return "Enjoyed your visit?";
-  if(c.includes("salon") || c.includes("barber")) return "Love your new look?";
-  if(c.includes("retail") || c.includes("online")) return "Happy with your experience?";
-  if(c.includes("home") || c.includes("contract")) return "Happy with our work?";
-  if(c.includes("health") || c.includes("dental")) return "How was your visit?";
-  return "Happy with your experience?";
-}
-
-export default function Home() {
-  const [step,setStep]=useState<Step>("search");
-  const [name,setName]=useState("");
-  const [category,setCategory]=useState("");
-  const [reviewUrl,setReviewUrl]=useState("");
-  const [website,setWebsite]=useState("");
-  const [address,setAddress]=useState("");
-  const [color,setColor]=useState("#1f6f5f");
-  const [interactions,setInteractions]=useState<Interaction[]>([]);
-  const [qr,setQr]=useState("");
-  const [attempted,setAttempted]=useState(false);
-  const cardRef=useRef<HTMLDivElement>(null);
-
-  const validReviewUrl=isValidReviewUrl(reviewUrl);
-  const canPreview=Boolean(name.trim() && category.trim() && interactions.length && validReviewUrl);
-
-  function toggleInteraction(id:Interaction){
-    setInteractions(current=>current.includes(id)?current.filter(x=>x!==id):[...current,id]);
-  }
-
-  async function buildPreview(){
-    setAttempted(true);
-    if(!canPreview) return;
-    const data=await QRCode.toDataURL(reviewUrl.trim(),{width:1200,margin:4,errorCorrectionLevel:"M",color:{dark:"#000000",light:"#FFFFFF"}});
-    setQr(data);
-    setStep("preview");
-  }
-
-  const initials=useMemo(()=>name.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase() || "RK",[name]);
-  const reviewPrompt=promptFor(category);
-
-  async function downloadReviewCard(){
-    if(!qr) return;
-    const pdf=await PDFDocument.create();
-    const page=pdf.addPage([252,144]);
-    const regular=await pdf.embedFont(StandardFonts.Helvetica);
-    const bold=await pdf.embedFont(StandardFonts.HelveticaBold);
-    const hex=color.replace("#","");
-    const brand=rgb(parseInt(hex.slice(0,2),16)/255,parseInt(hex.slice(2,4),16)/255,parseInt(hex.slice(4,6),16)/255);
-    page.drawRectangle({x:0,y:0,width:163.5,height:144,color:brand});
-    page.drawRectangle({x:163.5,y:0,width:88.5,height:144,color:rgb(1,1,1)});
-    page.drawCircle({x:24,y:121,size:10,color:rgb(1,1,1)});
-    const mark=initials.slice(0,2);
-    page.drawText(mark,{x:24-bold.widthOfTextAtSize(mark,6)/2,y:119,size:6,font:bold,color:brand});
-    const safeName=name.trim().slice(0,46);
-    page.drawText(safeName,{x:38,y:118,size:safeName.length>30?6.2:7.2,font:bold,color:rgb(1,1,1),maxWidth:118});
-    page.drawText("YOUR FEEDBACK MATTERS",{x:15,y:87,size:4.5,font:bold,color:rgb(.84,.93,.9)});
-    const prompt=reviewPrompt;
-    const promptSize=14;
-    const promptMaxWidth=136;
-    const promptWords=prompt.split(" ");
-    const promptLines:string[]=[];
-    let currentLine="";
-    for(const word of promptWords){
-      const candidate=currentLine ? currentLine+" "+word : word;
-      if(bold.widthOfTextAtSize(candidate,promptSize)<=promptMaxWidth || !currentLine){
-        currentLine=candidate;
-      }else{
-        promptLines.push(currentLine);
-        currentLine=word;
-      }
-    }
-    if(currentLine) promptLines.push(currentLine);
-    const visibleLines=promptLines.slice(0,2);
-    const firstY=visibleLines.length>1?72:66;
-    visibleLines.forEach((line,index)=>page.drawText(line,{x:15,y:firstY-index*15,size:promptSize,font:bold,color:rgb(1,1,1)}));
-    const bodyY=visibleLines.length>1?38:49;
-    page.drawText("Share your experience with us on Google.",{x:15,y:bodyY,size:6.2,font:regular,color:rgb(1,1,1)});
-    page.drawText("Thank you — your feedback helps our business grow.",{x:15,y:14,size:4.5,font:regular,color:rgb(.9,.96,.94)});
-    const qrBytes=Uint8Array.from(atob(qr.split(",")[1]),ch=>ch.charCodeAt(0));
-    const qrImage=await pdf.embedPng(qrBytes);
-    page.drawRectangle({x:169.5,y:42.5,width:76,height:76,color:rgb(1,1,1)});
-    page.drawImage(qrImage,{x:173.5,y:46.5,width:68,height:68});
-    const scan="Scan to review";
-    page.drawText(scan,{x:208-bold.widthOfTextAtSize(scan,6.5)/2,y:39,size:6.5,font:bold,color:rgb(.07,.1,.08)});
-    const camera="Open your camera";
-    page.drawText(camera,{x:208-regular.widthOfTextAtSize(camera,4.5)/2,y:30,size:4.5,font:regular,color:rgb(.42,.46,.43)});
-    const bytes=await pdf.save();
-    const blob=new Blob([new Uint8Array(bytes)],{type:"application/pdf"});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement("a");
-    a.href=url;
-    a.download=(name.trim().replace(/[^a-z0-9]+/gi,"-").replace(/^-|-$/g,"")||"business")+"-review-card.pdf";
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  return <main>
-    <header className="topbar">
-      <div className="brand">Review Kit</div>
-      <div className="pill">$29 one-time <span>•</span> no subscription</div>
-    </header>
-
-    {step==="search" && <section className="hero">
-      <div className="eyebrow">PERSONALIZED FOR YOUR BUSINESS</div>
-      <h1>Turn happy customers into more Google reviews.</h1>
-      <p className="sub">Professional review materials personalized to your business and the way you work with customers.</p>
-      <div className="card searchCard">
-        <label>Find your business</label>
-        <div className="searchRow"><input placeholder="Business name or address" disabled/><button disabled>Search</button></div>
-        <p className="helper">Business search is coming next. Manual setup is fully supported and will always remain available.</p>
-        <button className="linkButton" onClick={()=>setStep("manual")}>Can't find your business? Enter it manually →</button>
-      </div>
-      <div className="trustGrid">
-        <div><strong>No design work</strong><span>we personalize it</span></div>
-        <div><strong>No subscription</strong><span>one-time purchase</span></div>
-        <div><strong>Preview first</strong><span>see it before buying</span></div>
-      </div>
-    </section>}
-
-    {step==="manual" && <section className="builderWrap">
-      <div className="builder">
-        <button className="back" onClick={()=>setStep("search")}>← Back</button>
-        <div className="eyebrow">BUSINESS SETUP</div>
-        <h1>Tell us about your business.</h1>
-        <p className="sub small">Required fields are marked *. Optional details improve personalization but will never block your kit.</p>
-
-        <div className="formGrid">
-          <label>Business name *<input value={name} maxLength={120} onChange={e=>setName(e.target.value)} placeholder="Bay Area Lawn & Landscape"/></label>
-          <label>Business category *
-            <select value={category} onChange={e=>setCategory(e.target.value)}>
-              <option value="">Choose a category</option><option>Home Service / Contractor</option><option>Restaurant / Food</option><option>Salon / Barber / Beauty</option><option>Retail</option><option>Healthcare / Dental</option><option>Professional Service</option><option>Online Business</option><option>Other</option>
-            </select>
-          </label>
-
-          <fieldset className="full interactionField">
-            <legend>How do you work with your customers? *</legend>
-            <p className="helper">Choose all that apply. This determines which materials go into your kit.</p>
-            <div className="interactionGrid">
-              {interactionOptions.map(option=><button type="button" key={option.id} className={interactions.includes(option.id)?"interaction selected":"interaction"} onClick={()=>toggleInteraction(option.id)} aria-pressed={interactions.includes(option.id)}>
-                <span className="check">{interactions.includes(option.id)?"✓":""}</span><span><strong>{option.title}</strong><small>{option.detail}</small></span>
-              </button>)}
-            </div>
-          </fieldset>
-
-          <label className="full">Google review link *
-            <input value={reviewUrl} onChange={e=>{setReviewUrl(e.target.value);setAttempted(false)}} placeholder="Paste your Google review link"/>
-            <span className="helper">This is the destination used by every QR code in your kit.</span>
-            {reviewUrl && !validReviewUrl && <span className="error">Enter a valid Google review link (Google, g.page, or Google Maps).</span>}
-            <button type="button" className="helpLink">How do I find my Google review link?</button>
-          </label>
-
-          <label>Website <span className="optional">Optional</span><input value={website} onChange={e=>setWebsite(e.target.value)} placeholder="yourbusiness.com"/></label>
-          <label>Location / address <span className="optional">Optional</span><input value={address} onChange={e=>setAddress(e.target.value)} placeholder="City, State or full address"/></label>
-          <label>Brand color <span className="optional">Optional</span><div className="colorRow"><input className="colorInput" type="color" value={color} onChange={e=>setColor(e.target.value)}/><span>{color.toUpperCase()}</span></div></label>
-          <label>Logo <span className="optional">Optional</span><input type="file" accept="image/png,image/jpeg,image/webp" disabled/><span className="helper">Logo upload is added after this setup flow is verified. Your business name works as clean text branding without one.</span></label>
-        </div>
-
-        {attempted && !canPreview && <div className="formError">Complete the required fields above before creating your preview.</div>}
-        <button className="primary" onClick={buildPreview}>Create my preview →</button>
-      </div>
-    </section>}
-
-    {step==="preview" && <section className="previewWrap">
-      <div className="previewHead">
-        <button className="back" onClick={()=>setStep("manual")}>← Edit details</button>
-        <div><div className="eyebrow">PERSONALIZED PREVIEW</div><h1>{name}</h1></div>
-      </div>
-      <div className="previewGrid">
-        <div className="reviewCard" ref={cardRef} style={{"--brand":color} as React.CSSProperties}>
-          <div className="reviewCardBrand">
-            <div className="reviewIdentity">
-              <div className="logoDot">{initials}</div>
-              <div className="assetTitle">{name}</div>
-            </div>
-            <div className="reviewMessage">
-              <div className="reviewKicker">YOUR FEEDBACK MATTERS</div>
-              <h2>{reviewPrompt}</h2>
-              <p>Share your experience with us on Google.</p>
-            </div>
-            <div className="reviewThanks">Thank you — your feedback helps our business grow.</div>
-          </div>
-          <div className="reviewCardQr">
-            {qr && <img src={qr} alt={"QR code linking to the Google review page for "+name}/>}
-            <strong>Scan to review</strong>
-            <span>Open your camera</span>
-          </div>
-        </div>
-        <div className="detailsPanel">
-          <div className="eyebrow">YOUR KIT WILL ADAPT TO YOU</div>
-          <h3>Business setup confirmed</h3>
-          <dl className="summary">
-            <div><dt>Category</dt><dd>{category}</dd></div>
-            <div><dt>Customer interaction</dt><dd>{interactions.map(id=>interactionOptions.find(x=>x.id===id)?.title).join(", ")}</dd></div>
-            {website && <div><dt>Website</dt><dd>{website}</dd></div>}
-            {address && <div><dt>Location</dt><dd>{address}</dd></div>}
-          </dl>
-          <div className="nextBox"><strong>Your review card is ready to test</strong><br/>Your QR code links directly to the Google review destination you provided. Review the design, then print or save the card to test the final size.</div>
-          <div className="cardActions">
-            <div><strong>Review Card · 3.5 × 2 in</strong><span>Exact 3.5 × 2 in PDF</span></div>
-            <button className="primary compact" onClick={downloadReviewCard}>Download PDF</button>
-          </div>
-        </div>
-      </div>
-    </section>}
-  </main>;
+return <main><header className="topbar"><button className="brandBtn" onClick={()=>setStep("start")}>Review Kit</button><div className="pill">$29 one-time <span>•</span> no subscription</div></header>
+{step==="start"&&<section className="hero"><div className="eyebrow">GOOGLE REVIEW MATERIALS, DONE FOR YOU</div><h1>Make it easier for happy customers to leave a review.</h1><p className="sub">Create a polished, branded review kit with QR cards, signs, graphics and ready-to-send request templates.</p><button className="primary big" onClick={()=>setStep("setup")}>Create my review kit →</button><div className="miniTrust"><span>One-time purchase</span><span>Preview before buying</span><span>No design skills needed</span></div><div className="included"><div><b>What you get</b><p>Review card • Print sheet • Phone graphic • QR code • Request templates • Start guide</p></div><div><b>Built for your workflow</b><p>Counter sign, leave-behind, package insert or digital asset added automatically.</p></div></div></section>}
+{step==="setup"&&<section className="builderWrap"><div className="builder"><button className="back" onClick={()=>setStep("start")}>← Back</button><div className="eyebrow">BUSINESS SETUP</div><h1>Build your kit.</h1><p className="sub small">Add your business details. We'll adapt the materials to how you work with customers.</p><div className="formGrid"><label>Business name *<input value={name} maxLength={120} onChange={e=>setName(e.target.value)} placeholder="Your business name"/></label><label>Business category *<select value={category} onChange={e=>setCategory(e.target.value)}><option value="">Choose a category</option>{cats.map(c=><option key={c}>{c}</option>)}</select></label><fieldset className="full interactionField"><legend>How do you work with customers? *</legend><p className="helper">Choose all that apply.</p><div className="interactionGrid">{interactions.map(o=><button type="button" key={o.id} className={modes.includes(o.id)?"interaction selected":"interaction"} onClick={()=>toggle(o.id)}><span className="check">{modes.includes(o.id)?"✓":""}</span><span><strong>{o.title}</strong><small>{o.detail}</small></span></button>)}</div></fieldset><label className="full">Google review link *<input value={reviewUrl} onChange={e=>setReviewUrl(e.target.value)} placeholder="Paste your Google review link"/><span className="helper">Every QR code will point here.</span>{reviewUrl&&!validGoogle(reviewUrl)&&<span className="error">Enter a valid Google, g.page, or Google Maps review link.</span>}</label><label>Website <span className="optional">Optional</span><input value={website} onChange={e=>setWebsite(e.target.value)} placeholder="yourbusiness.com"/></label><label>Location <span className="optional">Optional</span><input value={address} onChange={e=>setAddress(e.target.value)} placeholder="City, State or full address"/></label><label>Brand color <span className="optional">Optional</span><div className="colorRow"><input className="colorInput" type="color" value={color} onChange={e=>setColor(e.target.value)}/><span>{color.toUpperCase()}</span></div></label><label>Logo <span className="optional">Optional</span><input type="file" accept="image/png,image/jpeg" onChange={e=>loadLogo(e.target.files?.[0])}/><span className="helper">{logo?"Logo ready.":"PNG or JPG, up to 4 MB. No logo? We'll use your initials."}</span></label></div>{attempted&&!ready&&<div className="formError">Complete the required fields above.</div>}<button className="primary" onClick={makePreview}>Create my preview →</button></div></section>}
+{step==="preview"&&<section className="previewWrap"><div className="previewHead"><button className="back" onClick={()=>setStep("setup")}>← Edit details</button><div><div className="eyebrow">YOUR REVIEW KIT</div><h1>{name}</h1></div></div><div className="previewGrid"><div className="reviewCard" style={{"--brand":color} as React.CSSProperties}><div className="reviewCardBrand"><div className="reviewIdentity">{logo?<img className="logoImage" src={logo} alt="Business logo"/>:<div className="logoDot">{initials}</div>}<div className="assetTitle">{name}</div></div><div className="reviewMessage"><div className="reviewKicker">YOUR FEEDBACK MATTERS</div><h2>{prompt}</h2><p>Share your experience with us on Google.</p></div><div className="reviewThanks">Thank you — your feedback helps our business grow.</div></div><div className="reviewCardQr">{qr&&<img src={qr} alt={"QR code for "+name}/>}<strong>Scan to review</strong><span>Open your camera</span></div></div><aside className="detailsPanel"><div className="eyebrow">PERSONALIZED & READY</div><h3>Your kit is ready.</h3><div className="kitCount">6 core assets + {modes.length} workflow {modes.length===1?"asset":"assets"}</div><div className="assetList"><span>✓ Review Card PDF</span><span>✓ US Letter Print Sheet</span><span>✓ 1080×1920 Phone Graphic</span><span>✓ High-resolution QR PNG</span><span>✓ Review Request Templates</span><span>✓ Start Here Guide</span>{modes.includes("visit-us")&&<span>✓ 5×7 Counter Sign</span>}{modes.includes("we-visit")&&<span>✓ 4×6 Leave-Behind</span>}{modes.includes("delivery")&&<span>✓ 4×6 Package Insert</span>}{modes.includes("online")&&<span>✓ Digital Review Card</span>}</div><button className="primary fullBtn" disabled={busy} onClick={buildKit}>{busy?"Building your kit…":"Download complete kit (.zip)"}</button><button className="secondary fullBtn" onClick={async()=>download(await cardPdf(),slug(name)+"-review-card.pdf")}>Download review card only</button><p className="fine">Before using printed materials, scan the QR from the downloaded file with your phone to confirm it opens the correct Google review page.</p></aside></div></section>}</main>
 }
