@@ -53,7 +53,7 @@ export default function Home() {
   async function buildPreview(){
     setAttempted(true);
     if(!canPreview) return;
-    const data=await QRCode.toDataURL(reviewUrl.trim(),{width:900,margin:4,errorCorrectionLevel:"H",color:{dark:"#111111",light:"#FFFFFF"}});
+    const data=await QRCode.toDataURL(reviewUrl.trim(),{width:1200,margin:4,errorCorrectionLevel:"M",color:{dark:"#000000",light:"#FFFFFF"}});
     setQr(data);
     setStep("preview");
   }
@@ -101,7 +101,7 @@ export default function Home() {
     page.drawText("Thank you — your feedback helps our business grow.",{x:15,y:14,size:4.5,font:regular,color:rgb(.9,.96,.94)});
     const qrBytes=Uint8Array.from(atob(qr.split(",")[1]),ch=>ch.charCodeAt(0));
     const qrImage=await pdf.embedPng(qrBytes);
-    page.drawImage(qrImage,{x:177,y:50,width:62,height:62});
+    page.drawRectangle({x:169.5,y:42.5,width:76,height:76,color:rgb(1,1,1)});\n    page.drawImage(qrImage,{x:173.5,y:46.5,width:68,height:68});
     const scan="Scan to review";
     page.drawText(scan,{x:208-bold.widthOfTextAtSize(scan,6.5)/2,y:39,size:6.5,font:bold,color:rgb(.07,.1,.08)});
     const camera="Open your camera";
