@@ -2,3 +2,24 @@
 
 /* Phase 1 business setup */
 .interactionField{border:0;padding:0;margin:0;min-width:0}.interactionField legend{font-weight:800;padding:0}.interactionGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.interaction{display:flex;align-items:flex-start;gap:12px;text-align:left;border:1px solid #d8ded8;background:#fff;border-radius:14px;padding:16px;cursor:pointer;color:#17201b}.interaction:hover{border-color:#9eb5a5}.interaction.selected{border:2px solid #1f6f5f;background:#f2f7f3;padding:15px}.interaction .check{width:22px;height:22px;border:1px solid #aeb9b0;border-radius:6px;display:grid;place-items:center;flex:0 0 auto;font-size:13px}.interaction.selected .check{background:#1f6f5f;color:#fff;border-color:#1f6f5f}.interaction strong,.interaction small{display:block}.interaction small{font-size:12px;line-height:1.4;color:#707b73;margin-top:4px}.optional{font-size:11px;font-weight:600;color:#8a938d}.error{font-size:13px;color:#a12a2a;font-weight:650}.helpLink{border:0;background:transparent;color:#1f6f5f;padding:0;text-align:left;font-size:13px;font-weight:750;cursor:pointer;width:max-content}.colorRow{display:flex;align-items:center;gap:12px;height:48px}.formGrid .colorInput{width:64px;height:44px;padding:3px;cursor:pointer}.formError{margin-top:18px;padding:13px 15px;border-radius:10px;background:#fff1f1;color:#8e2424;font-size:14px;font-weight:650}.summary{margin:18px 0 0}.summary div{padding:14px 0;border-bottom:1px solid #e8ebe7}.summary dt{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#7b857e;font-weight:800}.summary dd{margin:5px 0 0;font-weight:650;line-height:1.45}@media(max-width:760px){.interactionGrid{grid-template-columns:1fr}}
+
+/* Phase 2: production review-card master */
+.cardActions{grid-column:1;display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:-14px;padding:14px 16px;border:1px solid #e5e7eb;border-radius:14px;background:#fff}
+.cardActions div{display:flex;flex-direction:column;gap:2px}
+.cardActions span{font-size:12px;color:#6b7280}
+.primary.compact{width:auto;margin:0;padding:11px 15px;font-size:13px}
+.reviewCard{aspect-ratio:1.75/1;box-sizing:border-box;overflow:hidden}
+
+@media print{
+  @page{size:3.5in 2in;margin:0}
+  html,body{width:3.5in;height:2in;margin:0!important;padding:0!important;background:#fff!important}
+  body *{visibility:hidden!important}
+  .reviewCard,.reviewCard *{visibility:visible!important}
+  .reviewCard{position:fixed!important;inset:0!important;width:3.5in!important;height:2in!important;min-height:0!important;margin:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:.16in .18in!important;transform:none!important}
+  .reviewCard .logoDot{width:.31in!important;height:.31in!important;font-size:9pt!important}
+  .reviewCard .assetTitle{font-size:8.5pt!important;line-height:1.05!important}
+  .reviewCard h2{font-size:15pt!important;line-height:1.05!important;margin:.04in 0 .01in!important}
+  .reviewCard p{font-size:6.8pt!important;margin:0!important}
+  .reviewCard img{width:.68in!important;height:.68in!important;margin:.035in auto .01in!important}
+  .reviewCard .scan{font-size:6.2pt!important;line-height:1!important}
+}
