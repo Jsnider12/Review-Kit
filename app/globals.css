@@ -61,3 +61,10 @@ button:disabled{opacity:.58;cursor:not-allowed}
 .modalHero p{margin:0;color:rgba(255,255,255,.86);font-size:12px}
 .modalBadge{position:absolute;left:20px;top:18px;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.92);color:#173f31;font-size:10px;font-weight:850}
 @media(max-width:640px){.resultIntro{align-items:flex-start;flex-direction:column;gap:5px}.modalHero{height:210px;margin:-20px -20px 20px;padding:20px}.modalHero h2{font-size:29px}}
+
+.searchSummary{margin:7px 0 0;font-size:12px;opacity:.58}
+.emptyTrips{margin:20px 0 40px;padding:48px 24px;text-align:center;border:1px dashed rgba(23,63,49,.2);border-radius:22px;background:#fbfaf6}
+.emptyTrips>span{display:block;font-size:24px;margin-bottom:8px}
+.emptyTrips h3{font-size:24px;margin:0 0 7px;color:#173f31}
+.emptyTrips p{max-width:520px;margin:0 auto 18px;font-size:13px;line-height:1.6;opacity:.68}
+.emptyTrips button{border:0;border-radius:999px;padding:11px 16px;background:#173f31;color:#fff;font-weight:800;cursor:pointer}
