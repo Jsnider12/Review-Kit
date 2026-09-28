@@ -1,11 +1,16 @@
 export type TripSearch={origin:string;budget:number;travelers:number;days:number;vibe?:string;startDate?:string;dateMode?:"Flexible"|"Exact"};
+const addDays=(date:string,days:number)=>{const d=new Date(date+"T00:00:00Z");d.setUTCDate(d.getUTCDate()+days);return d.toISOString().slice(0,10)};
 export type OnTripCostProfile={foodPerPersonDay?:number;localPerDay?:number;activitiesPerPersonDay?:number;bufferRate?:number};
 export type InventoryQuote={provider:"demo"|"duffel"|"booking"|"expedia";kind:"flight"|"stay";destination:string;amount:number;currency:"USD";live:boolean;expiresAt?:string;startDate?:string;endDate?:string;travelers?:number};
 const hasInvalidExpiry=(q:InventoryQuote)=>Boolean(q.expiresAt&&!Number.isFinite(Date.parse(q.expiresAt)));
 const isExpired=(q:InventoryQuote)=>Boolean(q.expiresAt&&Number.isFinite(Date.parse(q.expiresAt))&&Date.parse(q.expiresAt)<=Date.now());
 const matchesSearch=(q:InventoryQuote,search:TripSearch)=>{
  if(q.travelers!==undefined&&q.travelers!==search.travelers)return false;
- if(search.dateMode==="Exact"&&search.startDate&&q.startDate&&q.startDate!==search.startDate)return false;
+ if(search.dateMode==="Exact"&&search.startDate){
+  if(q.startDate&&q.startDate!==search.startDate)return false;
+  const expectedEnd=addDays(search.startDate,search.days);
+  if(q.kind==="stay"&&q.endDate&&q.endDate!==expectedEnd)return false;
+ }
  return true;
 };
 export type VacationCandidate={destination:string;country:string;transport:number;stay:number;food:number;local:number;activities:number;buffer:number;total:number;confidence:"estimate"|"mixed"|"live";sources:string[];discovery?:boolean};
