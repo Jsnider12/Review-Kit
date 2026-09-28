@@ -1,4 +1,4 @@
-export type TripSearch={origin:string;budget:number;travelers:number;days:number;vibe?:string;startDate?:string};
+export type TripSearch={origin:string;budget:number;travelers:number;days:number;vibe?:string;startDate?:string;dateMode?:"Flexible"|"Exact"};
 export type InventoryQuote={provider:"demo"|"duffel"|"booking"|"expedia";kind:"flight"|"stay";destination:string;amount:number;currency:"USD";live:boolean;expiresAt?:string};
 export type VacationCandidate={destination:string;country:string;transport:number;stay:number;food:number;local:number;activities:number;buffer:number;total:number;confidence:"estimate"|"mixed"|"live";sources:string[];discovery?:boolean};
 
