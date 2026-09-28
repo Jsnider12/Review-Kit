@@ -1,6 +1,6 @@
 import {NextResponse} from "next/server";
 import {assembleVacation,rankVacations,type TripSearch} from "../../lib/trip-engine";
-import {demoProvider,destinations} from "../../lib/providers/demo";
+import {demoProvider,matchingDestinations} from "../../lib/providers/demo";
 
 export async function POST(req:Request){
  try{
@@ -9,12 +9,15 @@ export async function POST(req:Request){
    return NextResponse.json({error:"Invalid trip search."},{status:400});
   }
 
+  const profiles=matchingDestinations(search.vibe);
+  const destinations=profiles.map(d=>d.name);
+  const countries=new Map(profiles.map(d=>[d.name,d.country]));
   const [flights,stays]=await Promise.all([
    demoProvider.searchFlights?.(search,destinations)??[],
    demoProvider.searchStays?.(search,destinations)??[]
   ]);
   const quotes=[...flights,...stays];
-  const results=destinations.map(destination=>assembleVacation(search,destination,quotes)).filter(x=>x!==null);
+  const results=destinations.map(destination=>{const trip=assembleVacation(search,destination,quotes);return trip?{...trip,country:countries.get(destination)??""}:null}).filter(x=>x!==null);
   return NextResponse.json({
    mode:"demo",
    notice:"Validation estimates — live provider adapters are not enabled yet.",
