@@ -78,3 +78,7 @@ nav .navActive{background:#173f31;color:#fff;border-radius:999px;padding:8px 12p
 .budgetPresets button.active{background:#173f31;color:#fff;border-color:#173f31}
 .heroHint{text-align:center;margin:8px 0 0!important;font-size:11px!important;opacity:.52}
 @media(max-width:640px){.budgetPresets{justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;padding:0 2px 4px}.budgetPresets button{flex:0 0 auto}}
+
+.visual.photo:not([style]){background:linear-gradient(145deg,#dcebe4,#b8d5ca)}
+.destinationPlaceholder{position:absolute;inset:0;display:grid;place-items:center;font-size:54px;opacity:.5;pointer-events:none}
+.modalHero:not([style]){background:linear-gradient(145deg,#315f50,#173f31)}
