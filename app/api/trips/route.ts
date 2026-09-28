@@ -5,7 +5,8 @@ import {demoProvider,matchingDestinations} from "../../lib/providers/demo";
 export async function POST(req:Request){
  try{
   const search=await req.json() as TripSearch;
-  const validDate=!search.startDate||/^\\d{4}-\\d{2}-\\d{2}$/.test(search.startDate);\n  const exactDateValid=search.dateMode!=="Exact"||Boolean(search.startDate&&validDate);
+  const validDate=!search.startDate||/^\\d{4}-\\d{2}-\\d{2}$/.test(search.startDate);
+  const exactDateValid=search.dateMode!=="Exact"||Boolean(search.startDate&&validDate);
   if(!search.origin?.trim()||search.origin.length>120||!Number.isFinite(search.budget)||search.budget<100||search.budget>100000||!Number.isInteger(search.travelers)||search.travelers<1||search.travelers>20||!Number.isInteger(search.days)||search.days<1||search.days>30||!validDate||!exactDateValid){
    return NextResponse.json({error:"Invalid trip search."},{status:400});
   }
