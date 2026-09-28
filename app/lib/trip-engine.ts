@@ -1,7 +1,7 @@
 export type TripSearch={origin:string;budget:number;travelers:number;days:number;vibe?:string;startDate?:string;dateMode?:"Flexible"|"Exact"};
 const addDays=(date:string,days:number)=>{const d=new Date(date+"T00:00:00Z");d.setUTCDate(d.getUTCDate()+days);return d.toISOString().slice(0,10)};
 export type OnTripCostProfile={foodPerPersonDay?:number;localPerDay?:number;activitiesPerPersonDay?:number;bufferRate?:number};
-export type InventoryQuote={provider:"demo"|"duffel"|"booking"|"expedia";kind:"flight"|"stay";destination:string;amount:number;currency:"USD";live:boolean;expiresAt?:string;startDate?:string;endDate?:string;travelers?:number};
+export type InventoryQuote={provider:"demo"|"duffel"|"booking"|"expedia";kind:"flight"|"stay";destination:string;amount:number;currency:"USD";live:boolean;expiresAt?:string;startDate?:string;endDate?:string;travelers?:number;qualityScore?:number};
 const hasInvalidExpiry=(q:InventoryQuote)=>Boolean(q.expiresAt&&!Number.isFinite(Date.parse(q.expiresAt)));
 const isExpired=(q:InventoryQuote)=>Boolean(q.expiresAt&&Number.isFinite(Date.parse(q.expiresAt))&&Date.parse(q.expiresAt)<=Date.now());
 const matchesSearch=(q:InventoryQuote,search:TripSearch)=>{
@@ -26,8 +26,17 @@ export interface InventoryProvider {
  * This lets us combine/replace flight, hotel and activity providers without rebuilding the product.
  */
 export function assembleVacation(search:TripSearch,destination:string,quotes:InventoryQuote[],costs:OnTripCostProfile={}):VacationCandidate|null{
- const flight=quotes.filter(q=>q.destination===destination&&q.kind==="flight"&&!hasInvalidExpiry(q)&&!isExpired(q)&&matchesSearch(q,search)).sort((a,b)=>a.amount-b.amount)[0];
- const stay=quotes.filter(q=>q.destination===destination&&q.kind==="stay"&&!hasInvalidExpiry(q)&&!isExpired(q)&&matchesSearch(q,search)).sort((a,b)=>a.amount-b.amount)[0];
+ const choose=(kind:"flight"|"stay")=>{
+  const valid=quotes.filter(q=>q.destination===destination&&q.kind===kind&&!hasInvalidExpiry(q)&&!isExpired(q)&&matchesSearch(q,search));
+  if(!valid.length)return undefined;
+  const cheapest=Math.min(...valid.map(q=>q.amount));
+  // Don't blindly choose a miserable option to save a small amount. When quality
+  // metadata exists, consider options within 15% of the cheapest quote.
+  const competitive=valid.filter(q=>q.amount<=cheapest*1.15);
+  return competitive.sort((a,b)=>(b.qualityScore??0)-(a.qualityScore??0)||a.amount-b.amount)[0];
+ };
+ const flight=choose("flight");
+ const stay=choose("stay");
  // A complete vacation cannot silently treat a missing core component as free.
  // Ground-trip support can be modeled explicitly later; flight-based candidates require both.
  if(!flight||!stay)return null;
