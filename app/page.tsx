@@ -2,6 +2,8 @@
 import {useState} from "react";
 type ApiTrip={destination:string;country:string;transport:number;stay:number;food:number;local:number;activities:number;buffer:number;total:number;confidence:"estimate"|"mixed"|"live";sources:string[];tag?:string;emoji?:string;vibes?:string[];discovery?:boolean;image?:string;imageAlt?:string};
 type Trip={id:string;place:string;region:string;emoji:string;tag:string;vibe:string;base:number;transport:number;stay:number;spend:number;total:number;confidence?:"estimate"|"mixed"|"live";discovery?:boolean;image?:string;imageAlt?:string};
+const vacationTitle=(t:Trip,days:number)=>`${days} ${days===1?"night":"nights"} in ${t.place}`;
+const vacationWhy=(t:Trip,budget:number)=>{const room=budget-t.total;if(t.discovery)return `A less-obvious ${t.vibe.toLowerCase()} escape where your budget can buy a fuller experience.`;if(room>budget*.18)return `A strong ${t.vibe.toLowerCase()} vacation without using every dollar you planned to spend.`;if(room>=0)return `Uses your budget well while keeping transportation, the stay and on-trip spending together.`;return `A small stretch opens a meaningfully different ${t.vibe.toLowerCase()} vacation.`};
 const legacyDestinationImage=(place:string)=>({
 
 "New Orleans":"https://images.unsplash.com/photo-1519493966896-9c27a7e6f56a?auto=format&fit=crop&w=1200&q=80",
@@ -53,10 +55,10 @@ return <article className="card" key={t.id}>
 <span className="photoTag">{t.discovery?"Unexpected pick · "+t.tag:t.tag}</span>{!(t.image||legacyDestinationImage(t.place))&&<span className="destinationPlaceholder"><b>{t.place}</b><small>Destination photo unavailable</small></span>}
 </div>
 <div className="body">
-<div className="top"><div><h3>{t.place}</h3><p>{t.region} · {days} days</p></div><div className="price"><b>{"$"+t.total.toLocaleString()}</b><span>whole-trip estimate</span></div></div>
+<div className="top"><div><span className="vacationKicker">{t.place} · {t.region}</span><h3>{vacationTitle(t,days)}</h3><p>{t.vibe} vacation · {travelers} traveler{travelers===1?"":"s"}</p></div><div className="price"><b>{"$"+t.total.toLocaleString()}</b><span>whole-trip estimate</span></div></div>
 <div className={"fit "+(left>=0?"under":"over")}><b>{left>=0?"$"+left.toLocaleString()+" left in your budget":"$"+Math.abs(left).toLocaleString()+" over budget"}</b><span>{left>=0?"Room for upgrades, extras or savings":"A small stretch could unlock this trip"}</span></div>
-<div className="miniBreakdown"><span><small>GET THERE</small><b>{"$"+t.transport.toLocaleString()}</b></span><span><small>STAY</small><b>{"$"+t.stay.toLocaleString()}</b></span><span><small>ON THE TRIP</small><b>{"$"+t.spend.toLocaleString()}</b></span></div><div className="tripStory"><span>{t.vibe}</span><p>{t.discovery?"A less-obvious destination with enough budget left to enjoy it properly.":"A complete escape balanced around the amount you said you want to spend."}</p></div>
-<div className="cardActions"><button className="view" onClick={()=>setSelected(t)}>Explore this trip →</button></div>
+<div className="miniBreakdown"><span><small>GET THERE</small><b>{"$"+t.transport.toLocaleString()}</b></span><span><small>STAY</small><b>{"$"+t.stay.toLocaleString()}</b></span><span><small>ON THE TRIP</small><b>{"$"+t.spend.toLocaleString()}</b></span></div><div className="tripStory vacationWhy"><span>WHY THIS TRIP</span><p>{vacationWhy(t,budget)}</p></div>
+<div className="cardActions"><button className="view" onClick={()=>setSelected(t)}>See the vacation →</button></div>
 </div>
 </article>})}
 </div>}
