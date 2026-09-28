@@ -15,7 +15,15 @@ export const destinationProfiles:DestinationProfile[]=[
 {name:"San Diego",country:"USA",vibes:["Beach","City"],transport:520,stay:880,tag:"Coast + city",emoji:"🌅"},
 {name:"Great Smoky Mountains",country:"USA",vibes:["Outdoors","Adventure"],transport:280,stay:690,tag:"Cabin + outdoors",emoji:"🌲"},
 {name:"New York City",country:"USA",vibes:["City","Culture"],transport:560,stay:1120,tag:"Big city energy",emoji:"🗽"},
-{name:"Chicago",country:"USA",vibes:["City","Culture"],transport:420,stay:720,tag:"Food + architecture",emoji:"🏙️"}
+{name:"Chicago",country:"USA",vibes:["City","Culture"],transport:420,stay:720,tag:"Food + architecture",emoji:"🏙️"},
+{name:"Maui",country:"USA",vibes:["Beach","Adventure"],transport:1450,stay:1850,tag:"Hawaiian escape",emoji:"🌺"},
+{name:"Aruba",country:"Aruba",vibes:["Beach"],transport:1180,stay:1760,tag:"One happy island",emoji:"🏝️"},
+{name:"Belize",country:"Belize",vibes:["Beach","Adventure"],transport:980,stay:1420,tag:"Reef + rainforest",emoji:"🐠"},
+{name:"Vancouver",country:"Canada",vibes:["City","Outdoors"],transport:920,stay:1380,tag:"City + wild coast",emoji:"🏔️"},
+{name:"London",country:"United Kingdom",vibes:["City","Culture"],transport:1580,stay:1640,tag:"Classic city escape",emoji:"🇬🇧"},
+{name:"Paris",country:"France",vibes:["City","Culture"],transport:1660,stay:1720,tag:"Food + iconic streets",emoji:"🇫🇷"},
+{name:"Rome",country:"Italy",vibes:["Culture","City"],transport:1720,stay:1540,tag:"History + food",emoji:"🇮🇹"},
+{name:"Reykjavík",country:"Iceland",vibes:["Adventure","Outdoors"],transport:1420,stay:1480,tag:"Fire + ice",emoji:"🇮🇸"}
 ];
 
 export function matchingDestinations(vibe?:string){
