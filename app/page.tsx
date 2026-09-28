@@ -5,6 +5,9 @@ type Trip={id:string;place:string;region:string;emoji:string;tag:string;vibe:str
 const destinationImage=(place:string)=>({
 
 "New Orleans":"https://images.unsplash.com/photo-1519493966896-9c27a7e6f56a?auto=format&fit=crop&w=1200&q=80",
+"Austin":"https://www.airpartner.com/media/yfxporph/austin-texas-airport-guide-meta-1200-x-628.jpg",
+"Galveston":"https://images.contentstack.io/v3/assets/blt00454ccee8f8fe6b/blta5940c1c753c36d2/6139e2fcaa183b2c785b5d71/US_Galveston_US_Header.jpg?auto=webp&quality=70&width=1680",
+
 "Cancún":"https://images.unsplash.com/photo-1552074284-5e88ef1aef18?auto=format&fit=crop&w=1200&q=80",
 "Denver":"https://images.unsplash.com/photo-1619856699906-09e1f58c98b1?auto=format&fit=crop&w=1200&q=80",
 "Big Bend":"https://images.unsplash.com/photo-1592190057402-2bf1ee02118d?auto=format&fit=crop&w=1200&q=80",
