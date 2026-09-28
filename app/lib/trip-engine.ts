@@ -59,7 +59,10 @@ export function rankVacations(search:TripSearch,candidates:VacationCandidate[]){
   const discoveryBonus=trip.discovery?6:0;
   const confidenceBonus=trip.confidence==="live"?8:trip.confidence==="mixed"?4:0;
   const qualityBonus=Math.max(-6,Math.min(10,((trip.qualityScore??50)-50)/5));
-  return spendFit+discoveryBonus+confidenceBonus+qualityBonus;
+  // Very low-utilization trips can remain useful value alternatives, but should
+  // not dominate the primary recommendations for a materially larger spend.
+  const underusePenalty=ratio<.35?Math.min(28,(.35-ratio)*80):0;
+  return spendFit+discoveryBonus+confidenceBonus+qualityBonus-underusePenalty;
  };
  return [...candidates].sort((a,b)=>score(b)-score(a)||a.total-b.total);
 }
