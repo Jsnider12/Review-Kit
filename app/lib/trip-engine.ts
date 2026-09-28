@@ -1,6 +1,7 @@
 export type TripSearch={origin:string;budget:number;travelers:number;days:number;vibe?:string;startDate?:string;dateMode?:"Flexible"|"Exact"};
 export type OnTripCostProfile={foodPerPersonDay?:number;localPerDay?:number;activitiesPerPersonDay?:number;bufferRate?:number};
 export type InventoryQuote={provider:"demo"|"duffel"|"booking"|"expedia";kind:"flight"|"stay";destination:string;amount:number;currency:"USD";live:boolean;expiresAt?:string};
+const hasInvalidExpiry=(q:InventoryQuote)=>Boolean(q.expiresAt&&!Number.isFinite(Date.parse(q.expiresAt)));
 const isExpired=(q:InventoryQuote)=>Boolean(q.expiresAt&&Number.isFinite(Date.parse(q.expiresAt))&&Date.parse(q.expiresAt)<=Date.now());
 export type VacationCandidate={destination:string;country:string;transport:number;stay:number;food:number;local:number;activities:number;buffer:number;total:number;confidence:"estimate"|"mixed"|"live";sources:string[];discovery?:boolean};
 
@@ -15,8 +16,8 @@ export interface InventoryProvider {
  * This lets us combine/replace flight, hotel and activity providers without rebuilding the product.
  */
 export function assembleVacation(search:TripSearch,destination:string,quotes:InventoryQuote[],costs:OnTripCostProfile={}):VacationCandidate|null{
- const flight=quotes.filter(q=>q.destination===destination&&q.kind==="flight"&&!isExpired(q)).sort((a,b)=>a.amount-b.amount)[0];
- const stay=quotes.filter(q=>q.destination===destination&&q.kind==="stay"&&!isExpired(q)).sort((a,b)=>a.amount-b.amount)[0];
+ const flight=quotes.filter(q=>q.destination===destination&&q.kind==="flight"&&!hasInvalidExpiry(q)&&!isExpired(q)).sort((a,b)=>a.amount-b.amount)[0];
+ const stay=quotes.filter(q=>q.destination===destination&&q.kind==="stay"&&!hasInvalidExpiry(q)&&!isExpired(q)).sort((a,b)=>a.amount-b.amount)[0];
  // A complete vacation cannot silently treat a missing core component as free.
  // Ground-trip support can be modeled explicitly later; flight-based candidates require both.
  if(!flight||!stay)return null;
