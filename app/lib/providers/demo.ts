@@ -51,7 +51,9 @@ export const demoProvider:InventoryProvider={
  },
  async searchStays(search:TripSearch,names:string[]){
   return destinationProfiles.filter(d=>names.includes(d.name)).map(d=>({
-   provider:"demo",kind:"stay",destination:d.name,amount:Math.round(d.stay*(search.days/4)),currency:"USD",live:false
+   provider:"demo",kind:"stay",destination:d.name,
+   amount:Math.round(d.stay*(search.days/4)*Math.max(1,Math.ceil(search.travelers/2)*.88)),
+   currency:"USD",live:false
   } satisfies InventoryQuote));
  }
 };
