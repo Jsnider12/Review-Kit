@@ -92,3 +92,15 @@ nav .navActive{background:#173f31;color:#fff;border-radius:999px;padding:8px 12p
 .destinationPlaceholder{flex-direction:column;gap:3px;color:#173f31;text-align:center;opacity:.7}
 .destinationPlaceholder b{font-family:Georgia,serif;font-size:22px}.destinationPlaceholder small{font-size:9px;text-transform:uppercase;letter-spacing:.1em;font-weight:850}
 .modalHero.noPhoto{background:linear-gradient(145deg,#507568,#173f31)}
+
+/* Vacation Roulette */
+.wheelModal{position:relative;width:min(92vw,620px);max-height:92vh;overflow:auto;background:#fffdf8;border-radius:24px;padding:30px;text-align:center;box-shadow:0 24px 80px rgba(20,34,29,.28)}
+.wheelModal h2{font-size:clamp(30px,5vw,48px);margin:6px 0 8px;color:#173d32}.wheelModal>p{max-width:480px;margin:0 auto 22px;color:#65706b}
+.travelWheel{position:relative;width:290px;height:290px;margin:24px auto 28px;border-radius:50%;border:9px solid #f2e9d6;background:conic-gradient(#173d32 0 45deg,#d9a95b 45deg 90deg,#315e50 90deg 135deg,#efe1c4 135deg 180deg,#173d32 180deg 225deg,#d9a95b 225deg 270deg,#315e50 270deg 315deg,#efe1c4 315deg 360deg);box-shadow:0 12px 35px rgba(23,61,50,.18)}
+.travelWheel>span{position:absolute;left:50%;top:50%;width:92px;margin-left:-46px;margin-top:-10px;font-size:11px;font-weight:800;line-height:1.05;color:white;text-shadow:0 1px 4px rgba(0,0,0,.55)}
+.wheelCenter{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:56px;height:56px;border-radius:50%;background:#fffdf8;color:#173d32;font-size:24px;box-shadow:0 3px 14px rgba(0,0,0,.18);z-index:2}
+.wheelPointer{position:absolute;z-index:3;left:50%;top:-22px;transform:translateX(-50%);font-size:28px;color:#173d32}
+.travelWheel.spinning{animation:rouletteSpin 1.6s cubic-bezier(.12,.65,.18,1)}
+@keyframes rouletteSpin{from{transform:rotate(0)}to{transform:rotate(1440deg)}}
+.wheelSpin{min-width:190px}.wheelResult{padding:4px 0 0}.wheelResult small{font-weight:800;letter-spacing:.12em;color:#8b744b}.wheelResult h3{font-size:30px;margin:4px 0;color:#173d32}.wheelResult p{margin:0 0 16px;color:#65706b}.wheelResult .plain{margin-left:8px}
+@media(max-width:640px){.wheelModal{padding:26px 18px}.travelWheel{width:250px;height:250px}.travelWheel>span{transform-origin:center!important;font-size:10px}}
