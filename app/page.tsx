@@ -7,7 +7,16 @@ const destinationImage=(place:string)=>({
 "New Orleans":"https://images.unsplash.com/photo-1519493966896-9c27a7e6f56a?auto=format&fit=crop&w=1200&q=80",
 "Cancún":"https://images.unsplash.com/photo-1552074284-5e88ef1aef18?auto=format&fit=crop&w=1200&q=80",
 "Denver":"https://images.unsplash.com/photo-1619856699906-09e1f58c98b1?auto=format&fit=crop&w=1200&q=80",
-"Big Bend":"https://images.unsplash.com/photo-1592190057402-2bf1ee02118d?auto=format&fit=crop&w=1200&q=80"
+"Big Bend":"https://images.unsplash.com/photo-1592190057402-2bf1ee02118d?auto=format&fit=crop&w=1200&q=80",
+"San Juan":"https://unsplash.com/photos/48iZAbNgU8U/download?force=true&w=1200",
+"Mexico City":"https://unsplash.com/photos/ny8NHXepNV8/download?force=true&w=1200",
+"San Diego":"https://unsplash.com/photos/0rSbO04VLfE/download?force=true&w=1200",
+"Chicago":"https://images.unsplash.com/photo-1493134799591-2c9eed26201a?auto=format&fit=crop&w=1200&q=80",
+"Paris":"https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1200&q=80",
+"Rome":"https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=1200&q=80",
+"London":"https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1200&q=80",
+"Tokyo":"https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=1200&q=80",
+"Las Vegas":"https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1200&q=80"
 } as Record<string,string>)[place];
 export default function Home(){
 const [budget,setBudget]=useState(2000),[origin,setOrigin]=useState("Houston, TX"),[travelers,setTravelers]=useState(2),[days,setDays]=useState(4),[searched,setSearched]=useState(false),[vibe,setVibe]=useState("Any"),[saved,setSaved]=useState<string[]>([]),[showSaved,setShowSaved]=useState(false),[selected,setSelected]=useState<Trip|null>(null),[apiTrips,setApiTrips]=useState<ApiTrip[]>([]),[loading,setLoading]=useState(false),[dateMode,setDateMode]=useState("Flexible"),[startDate,setStartDate]=useState(""),[tripStyle,setTripStyle]=useState<"balanced"|"stay"|"experiences">("balanced"),[error,setError]=useState("");
