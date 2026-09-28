@@ -1,7 +1,7 @@
 "use client";
 import {useState} from "react";
 type ApiTrip={destination:string;country:string;transport:number;stay:number;food:number;local:number;activities:number;buffer:number;total:number;confidence:"estimate"|"mixed"|"live";sources:string[];tag?:string;emoji?:string;vibes?:string[]};
-type Trip={id:string;place:string;region:string;emoji:string;tag:string;vibe:string;base:number;transport:number;stay:number;spend:number;confidence?:"estimate"|"mixed"|"live"};
+type Trip={id:string;place:string;region:string;emoji:string;tag:string;vibe:string;base:number;transport:number;stay:number;spend:number;total:number;confidence?:"estimate"|"mixed"|"live"};
 export default function Home(){
 const [budget,setBudget]=useState(2000),[origin,setOrigin]=useState("Houston, TX"),[travelers,setTravelers]=useState(2),[days,setDays]=useState(4),[searched,setSearched]=useState(false),[vibe,setVibe]=useState("Any"),[saved,setSaved]=useState<string[]>([]),[selected,setSelected]=useState<Trip|null>(null),[apiTrips,setApiTrips]=useState<ApiTrip[]>([]),[loading,setLoading]=useState(false),[dateMode,setDateMode]=useState("Flexible"),[startDate,setStartDate]=useState(""),[tripStyle,setTripStyle]=useState<"balanced"|"stay"|"experiences">("balanced"),[error,setError]=useState("");
 const results:Trip[]=apiTrips.map(a=>({id:a.destination.toLowerCase().replace(/[^a-z0-9]+/g,"-"),place:a.destination,region:a.country,emoji:a.emoji||"✦",tag:a.tag||(a.confidence==="live"?"Live pricing":"Budget fit"),vibe:a.vibes?.[0]||"Any",base:a.total,transport:a.transport,stay:a.stay,spend:a.food+a.local+a.activities+a.buffer,total:a.total,confidence:a.confidence}));
