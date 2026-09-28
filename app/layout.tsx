@@ -1,8 +1,1 @@
-import "./globals.css";
-export const metadata = {
-  title: "Review Kit",
-  description: "Create a personalized Google review kit for your business.",
-};
-export default function RootLayout({children}:{children:React.ReactNode}) {
-  return <html lang="en"><body>{children}</body></html>;
-}
+import "./globals.css"; export const metadata={title:"Roamwithin — Vacations that fit your budget",description:"Start with your budget and discover complete vacations you can actually take."}; export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="en"><body>{children}</body></html>}
