@@ -32,7 +32,10 @@ export async function POST(req:Request){
     const ceiling=search.budget*1.25;
     const relevant=ranked.filter(x=>x.total<=ceiling);
     const fits=relevant.filter(x=>x.total<=search.budget);
-    if(!fits.length)return relevant.slice(0,12);
+    if(!relevant.length)return [];
+    // If nothing fits, show only a few nearby stretch ideas rather than a wall
+    // of over-budget vacations. The UI can then invite a budget/date adjustment.
+    if(!fits.length)return relevant.slice(0,3);
     const chosen:typeof ranked=[];
     const add=(x:(typeof ranked)[number]|undefined)=>{if(x&&!chosen.some(c=>c.destination===x.destination))chosen.push(x)};
     add(fits.find(x=>x.total>=search.budget*.72));
@@ -42,7 +45,7 @@ export async function POST(req:Request){
     add(fits.find(x=>x.total<search.budget*.48));
     add(fits.find(x=>x.discovery));
     for(const trip of relevant)add(trip);
-    return chosen;
+    return chosen.slice(0,12);
    })()
   });
  }catch{
