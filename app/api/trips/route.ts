@@ -27,8 +27,12 @@ export async function POST(req:Request){
    notice:"Validation estimates — live provider adapters are not enabled yet.",
    results:(()=>{
     const ranked=rankVacations(search,results);
-    const fits=ranked.filter(x=>x.total<=search.budget);
-    if(!fits.length)return ranked;
+    // Keep discovery relevant to the spend. A modest stretch can be useful;
+    // wildly unaffordable trips belong to a different search, not the bottom of this one.
+    const ceiling=search.budget*1.25;
+    const relevant=ranked.filter(x=>x.total<=ceiling);
+    const fits=relevant.filter(x=>x.total<=search.budget);
+    if(!fits.length)return relevant.slice(0,12);
     const chosen:typeof ranked=[];
     const add=(x:(typeof ranked)[number]|undefined)=>{if(x&&!chosen.some(c=>c.destination===x.destination))chosen.push(x)};
     add(fits.find(x=>x.total>=search.budget*.72));
@@ -37,7 +41,7 @@ export async function POST(req:Request){
     // Preserve one clear value alternative without letting cheap trips dominate.
     add(fits.find(x=>x.total<search.budget*.48));
     add(fits.find(x=>x.discovery));
-    for(const trip of ranked)add(trip);
+    for(const trip of relevant)add(trip);
     return chosen;
    })()
   });
