@@ -27,10 +27,13 @@ export function assembleVacation(search:TripSearch,destination:string,quotes:Inv
 }
 
 export function rankVacations(search:TripSearch,candidates:VacationCandidate[]){
- return [...candidates].sort((a,b)=>{
-  const aOver=a.total>search.budget?1:0,bOver=b.total>search.budget?1:0;
-  if(aOver!==bOver)return aOver-bOver;
-  const aUse=Math.abs(search.budget-a.total),bUse=Math.abs(search.budget-b.total);
-  return aUse-bUse;
- });
+ const score=(trip:VacationCandidate)=>{
+  const ratio=trip.total/search.budget;
+  // Best-fit trips should use the spend meaningfully without rewarding needless cost.
+  const spendFit=ratio<=1?100-Math.abs(.82-ratio)*90:55-Math.min(45,(ratio-1)*180);
+  const discoveryBonus=trip.discovery?6:0;
+  const confidenceBonus=trip.confidence==="live"?8:trip.confidence==="mixed"?4:0;
+  return spendFit+discoveryBonus+confidenceBonus;
+ };
+ return [...candidates].sort((a,b)=>score(b)-score(a)||a.total-b.total);
 }
