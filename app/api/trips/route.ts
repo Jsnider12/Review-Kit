@@ -12,13 +12,13 @@ export async function POST(req:Request){
 
   const profiles=matchingDestinations(search.vibe);
   const destinations=profiles.map(d=>d.name);
-  const countries=new Map(profiles.map(d=>[d.name,d.country]));
+  const profileMap=new Map(profiles.map(d=>[d.name,d]));
   const [flights,stays]=await Promise.all([
    demoProvider.searchFlights?.(search,destinations)??[],
    demoProvider.searchStays?.(search,destinations)??[]
   ]);
   const quotes=[...flights,...stays];
-  const results=destinations.map(destination=>{const trip=assembleVacation(search,destination,quotes);return trip?{...trip,country:countries.get(destination)??""}:null}).filter(x=>x!==null);
+  const results=destinations.map(destination=>{const trip=assembleVacation(search,destination,quotes);const profile=profileMap.get(destination);return trip?{...trip,country:profile?.country??"",tag:profile?.tag??"Trip idea",emoji:profile?.emoji??"✦",vibes:profile?.vibes??[]}:null}).filter(x=>x!==null);
   return NextResponse.json({
    mode:"demo",
    notice:"Validation estimates — live provider adapters are not enabled yet.",
