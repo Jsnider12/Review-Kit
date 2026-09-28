@@ -56,10 +56,33 @@ export function matchingDestinations(vibe?:string){
  return destinationProfiles.filter(d=>!vibe||vibe==="Any"||d.vibes.includes(vibe));
 }
 
+const originMarket=(origin:string)=>{
+ const o=origin.toLowerCase();
+ if(/\\b(ca|california)\\b|los angeles|san diego|san francisco|sacramento|san jose/.test(o))return "west";
+ if(/\\b(fl|florida)\\b|miami|orlando|tampa|jacksonville|pensacola/.test(o))return "southeast";
+ if(/\\b(ny|new york)\\b|new york city|nyc|boston|philadelphia|washington dc/.test(o))return "northeast";
+ if(/chicago|\\b(il|illinois)\\b|kansas city|st louis|denver|colorado/.test(o))return "central";
+ return "gulf";
+};
+const destinationMarket=(p:DestinationProfile)=>{
+ if(["California","Nevada","Hawaii"].includes(p.region||""))return "west";
+ if(["Florida","Tennessee","Puerto Rico"].includes(p.region||""))return "southeast";
+ if(["New York"].includes(p.region||"")||["UK","France","Italy","Portugal","Iceland","Switzerland","Slovenia"].includes(p.country))return "northeast";
+ if(["Illinois","Missouri","Colorado","Arkansas"].includes(p.region||""))return "central";
+ if(["Mexico","Belize","Costa Rica","Guatemala","Colombia","Curaçao","Aruba"].includes(p.country))return "gulf";
+ return "gulf";
+};
+const originAdjustedTransport=(p:DestinationProfile,origin:string)=>{
+ const from=originMarket(origin),to=destinationMarket(p);
+ if(from===to)return Math.round(p.transport*.72);
+ const factors:Record<string,number>={"gulf:west":1.28,"west:gulf":1.28,"gulf:northeast":1.18,"northeast:gulf":1.12,"west:northeast":1.38,"northeast:west":1.38,"west:southeast":1.42,"southeast:west":1.42,"southeast:northeast":1.08,"northeast:southeast":1.08,"central:west":1.14,"west:central":1.14,"central:northeast":1.08,"northeast:central":1.08,"central:southeast":1.08,"southeast:central":1.08};
+ return Math.round(p.transport*(factors[`${from}:${to}`]??1));
+};
+
 export const demoProvider:InventoryProvider={
  async searchFlights(search:TripSearch,names:string[]){
   return destinationProfiles.filter(d=>names.includes(d.name)).map(d=>({
-   provider:"demo",kind:"flight",destination:d.name,amount:Math.round(d.transport*(search.travelers/2)),currency:"USD",live:false
+   provider:"demo",kind:"flight",destination:d.name,amount:Math.round(originAdjustedTransport(d,search.origin)*(search.travelers/2)),currency:"USD",live:false
   } satisfies InventoryQuote));
  },
  async searchStays(search:TripSearch,names:string[]){
