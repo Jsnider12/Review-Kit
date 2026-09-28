@@ -150,3 +150,5 @@ nav .navActive{background:#173f31;color:#fff;border-radius:999px;padding:8px 12p
 
 .tripStory{border-top:1px solid rgba(23,63,49,.09);padding:13px 0 2px;display:flex;gap:12px;align-items:flex-start}.tripStory>span{flex:0 0 auto;border-radius:999px;background:#f2eee3;padding:5px 8px;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.07em}.tripStory p{margin:1px 0 0;font-size:11px;line-height:1.45;opacity:.64}
 @media(max-width:640px){.tripStory{gap:8px}.tripStory p{font-size:10.5px}}
+
+.vacationKicker{display:block;font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#6e7a74;margin-bottom:4px}.vacationWhy{margin-top:2px}.vacationWhy>span{background:#173f31;color:#fff}.vacationWhy p{font-size:11.5px}
