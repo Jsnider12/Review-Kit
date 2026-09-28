@@ -20,8 +20,24 @@ return <main>
 <section className="results">
 <div className="resultHead"><div><span className="eyebrow">BEST FITS FROM {origin.toUpperCase()}</span><h2>Here’s what <em>{"$"+budget.toLocaleString()}</em> can do.</h2></div><div><small>YOUR BUDGET</small><strong>{"$"+budget.toLocaleString()}</strong></div></div>
 <div className="resultTools"><span>{loading?"Searching vacation possibilities…":results.length+" vacation ideas matched"}</span><span>Validation pricing</span></div>
+{!loading&&results.length>0&&<div className="discoveryBar"><div><small>QUICK EXPLORE</small><b>{affordable} fit your budget{stretch>0?" · "+stretch+" more are close":""}</b></div><button onClick={()=>void exploreBudget(budget+300)}>What does +$300 unlock?</button><button onClick={()=>void surprise()}>Pick one for me ✦</button></div>}
 <div className="cards">
-{results.map((t,i)=>(<article className="card" key={t.id}><div className="visual photo" style={{backgroundImage:`linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,.48)),url("${destinationImage(t.place)}")`}}><span className="rank">#{i+1} MATCH</span><span className="photoTag">{t.tag}</span></div><div className="body"><div className="top"><div><h3>{t.place}</h3><p>{t.region} · {days} days</p></div><div className="price"><b>{"$"+t.total.toLocaleString()}</b><span>estimated total</span></div></div><button className="view" onClick={()=>setSelected(t)}>Explore this trip →</button></div></article>))}
+{results.map((t,i)=>{
+const left=budget-t.total;
+const isSaved=saved.includes(t.id);
+return <article className="card" key={t.id}>
+<div className="visual photo" style={{backgroundImage:`linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,.52)),url("${destinationImage(t.place)}")`}}>
+<span className="rank">#${i+1} MATCH</span>
+<button className={"heart "+(isSaved?"saved":"")} aria-label={isSaved?"Remove saved trip":"Save trip"} onClick={()=>setSaved(v=>isSaved?v.filter(id=>id!==t.id):[...v,t.id])}>{isSaved?"♥":"♡"}</button>
+<span className="photoTag">{t.tag}</span>
+</div>
+<div className="body">
+<div className="top"><div><h3>{t.place}</h3><p>{t.region} · {days} days</p></div><div className="price"><b>{"$"+t.total.toLocaleString()}</b><span>whole-trip estimate</span></div></div>
+<div className={"fit "+(left>=0?"under":"over")}><b>{left>=0?"$"+left.toLocaleString()+" left in your budget":"$"+Math.abs(left).toLocaleString()+" over budget"}</b><span>{left>=0?"Room for upgrades, extras or savings":"A small stretch could unlock this trip"}</span></div>
+<div className="miniBreakdown"><span><small>GET THERE</small><b>{"$"+t.transport.toLocaleString()}</b></span><span><small>STAY</small><b>{"$"+t.stay.toLocaleString()}</b></span><span><small>ON THE TRIP</small><b>{"$"+t.spend.toLocaleString()}</b></span></div>
+<div className="cardActions"><button className="view" onClick={()=>setSelected(t)}>Explore this trip →</button></div>
+</div>
+</article>})}
 </div>
 </section>
 ) : (
