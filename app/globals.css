@@ -31,3 +31,6 @@ button:disabled{opacity:.58;cursor:not-allowed}
 .bookingPath{margin:16px 0 12px;padding:13px 14px;border-radius:12px;background:#f5f6f2;border:1px solid #e0e4dc}
 .bookingPath span{display:block;font-size:9px;font-weight:900;letter-spacing:.12em;color:#718077;margin-bottom:4px}
 .bookingPath b{display:block;font-size:13px;color:#243d31}.bookingPath p{margin:4px 0 0;font-size:11px;line-height:1.45;color:#68736d}
+
+.budgetPlay{display:flex;align-items:center;justify-content:center;gap:8px;margin:12px 0 4px}.budgetPlay>span{font-size:9px;font-weight:900;letter-spacing:.12em;color:#7a817c;margin-right:5px}.budgetPlay b{min-width:74px;text-align:center;font-size:14px}.budgetPlay button{border:1px solid #dcd9d0;background:white;border-radius:999px;padding:7px 11px;font-size:10px;font-weight:800;cursor:pointer}.budgetPlay button:hover{background:#f7f5ef}
+@media(max-width:640px){.budgetPlay{justify-content:flex-start;overflow-x:auto}.budgetPlay>span{white-space:nowrap}.budgetPlay button{min-height:38px;white-space:nowrap}}
