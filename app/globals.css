@@ -21,3 +21,8 @@ button:disabled{opacity:.58;cursor:not-allowed}
  .breakdown span{padding:9px 5px}
  .view{min-height:44px}
 }
+
+.discoveryBar{display:flex;align-items:center;gap:10px;margin:14px 0 20px;padding:10px;border:1px solid #e5e2d9;border-radius:14px;background:#fff}
+.discoveryBar>div{display:flex;align-items:baseline;gap:6px;padding:0 8px;margin-right:auto}.discoveryBar>div b{font-size:20px}.discoveryBar>div span{font-size:11px;color:#68736d}
+.discoveryBar button{border:1px solid #dcd9d0;background:#f8f7f2;border-radius:999px;padding:9px 12px;font-size:11px;font-weight:800;cursor:pointer}.discoveryBar button:hover{background:#f0eee7}
+@media(max-width:640px){.discoveryBar{overflow-x:auto;justify-content:flex-start;-webkit-overflow-scrolling:touch}.discoveryBar>div{min-width:max-content}.discoveryBar button{white-space:nowrap;min-height:40px}}
