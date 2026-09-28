@@ -27,7 +27,7 @@ export async function POST(req:Request){
   // Build a varied spin: exciting/discovery and travel-style diversity first,
   // then fill with the strongest remaining budget fits.
   addRoulette(rouletteFits.find(x=>x.discovery));
-  for(const style of ["Beach","Adventure","Culture","City","Outdoors","Nightlife"])addRoulette(rouletteFits.find(x=>x.vibes?.includes(style)));
+  for(const style of ["Beach","Adventure","Culture","City","Outdoors","Nightlife"])addRoulette(rouletteFits.find(x=>profileMap.get(x.destination)?.vibes.includes(style)));
   for(const trip of rouletteFits.filter(x=>x.discovery))addRoulette(trip);
   for(const trip of rouletteFits)addRoulette(trip);
   roulette.splice(16);
