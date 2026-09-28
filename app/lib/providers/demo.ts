@@ -2,7 +2,20 @@ import type {InventoryProvider,InventoryQuote,TripSearch} from "../trip-engine";
 
 export type DestinationProfile={name:string;country:string;vibes:string[];transport:number;stay:number;tag:string;emoji:string;discovery?:boolean;costLevel?:"value"|"standard"|"premium"|"luxury"};
 export const destinationProfiles:DestinationProfile[]=[
-{name:"New Orleans",country:"USA",vibes:["Culture","City"],transport:0,stay:438,tag:"Food + culture",emoji:"⚜️"},
+{name:"New Orleans",country:"USA",vibes:["Culture","City"],transport:360,stay:438,tag:"Food + culture",emoji:"⚜️",costLevel:"value"},
+{name:"Austin",country:"USA",vibes:["City","Culture","Nightlife"],transport:140,stay:480,tag:"Food + live music",emoji:"🎵"},
+{name:"San Antonio",country:"USA",vibes:["Culture","City"],transport:150,stay:430,tag:"River Walk getaway",emoji:"🌮"},
+{name:"Galveston",country:"USA",vibes:["Beach"],transport:80,stay:520,tag:"Easy Gulf escape",emoji:"🌊"},
+{name:"Corpus Christi",country:"USA",vibes:["Beach","Outdoors"],transport:190,stay:470,tag:"Coast + outdoors",emoji:"☀️"},
+{name:"Fredericksburg",country:"USA",vibes:["Culture","Outdoors"],transport:180,stay:560,tag:"Hill Country escape",emoji:"🌿"},
+{name:"Dallas",country:"USA",vibes:["City","Culture"],transport:180,stay:460,tag:"Food + city weekend",emoji:"🏙️"},
+{name:"Lafayette",country:"USA",vibes:["Culture"],transport:170,stay:390,tag:"Cajun country",emoji:"⚜️",discovery:true,costLevel:"value"},
+{name:"Hot Springs",country:"USA",vibes:["Outdoors","Culture"],transport:230,stay:430,tag:"Spa + mountain town",emoji:"♨️",discovery:true,costLevel:"value"},
+{name:"Pensacola",country:"USA",vibes:["Beach"],transport:330,stay:570,tag:"White-sand Gulf",emoji:"🏖️"},
+{name:"Kansas City",country:"USA",vibes:["City","Culture"],transport:330,stay:450,tag:"Barbecue + neighborhoods",emoji:"🎷",discovery:true,costLevel:"value"},
+{name:"Memphis",country:"USA",vibes:["Culture","Nightlife"],transport:320,stay:420,tag:"Music + barbecue",emoji:"🎶",costLevel:"value"},
+{name:"Tulum",country:"Mexico",vibes:["Beach","Culture"],transport:560,stay:620,tag:"Caribbean + ruins",emoji:"🌴"},
+{name:"Mérida",country:"Mexico",vibes:["Culture","City"],transport:520,stay:430,tag:"Yucatán culture",emoji:"🌺",discovery:true,costLevel:"value"},
 {name:"Cancún",country:"Mexico",vibes:["Beach"],transport:520,stay:690,tag:"Caribbean escape",emoji:"🌴"},
 {name:"Denver",country:"USA",vibes:["Adventure","City"],transport:410,stay:585,tag:"Mountains + city",emoji:"🏔️"},
 {name:"Big Bend",country:"USA",vibes:["Outdoors","Adventure"],transport:240,stay:520,tag:"Desert road trip",emoji:"🌵"},
