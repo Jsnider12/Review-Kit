@@ -21,7 +21,7 @@ export async function POST(req:Request){
    demoProvider.searchStays?.(search,destinations)??[]
   ]);
   const quotes=[...flights,...stays].filter(q=>q&&typeof q.destination==="string"&&q.destination.trim()&&Number.isFinite(q.amount)&&q.amount>0&&(q.kind==="flight"||q.kind==="stay"));
-  const results=destinations.map(destination=>{const profile=profileMap.get(destination);const trip=assembleVacation(search,destination,quotes,profile?onTripCosts(profile):{});return trip?{...trip,country:profile?.country??"",tag:profile?.tag??"Trip idea",emoji:profile?.emoji??"✦",vibes:profile?.vibes??[],discovery:profile?.discovery??false}:null}).filter(x=>x!==null);
+  const results=destinations.map(destination=>{const profile=profileMap.get(destination);const trip=assembleVacation(search,destination,quotes,profile?onTripCosts(profile):{});return trip?{...trip,country:profile?.country??"",tag:profile?.tag??"Trip idea",emoji:profile?.emoji??"✦",vibes:profile?.vibes??[],discovery:profile?.discovery??false,image:profile?.image??"",imageAlt:profile?.imageAlt??""}:null}).filter(x=>x!==null);
   const rouletteFits=rankVacations(search,results).filter(x=>x.total<=search.budget);
   const roulette:(typeof rouletteFits)=[]; const addRoulette=(x:(typeof rouletteFits)[number]|undefined)=>{if(x&&!roulette.some(r=>r.destination===x.destination))roulette.push(x)};
   // Build a varied spin: exciting/discovery and travel-style diversity first,
