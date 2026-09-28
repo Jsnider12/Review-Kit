@@ -32,7 +32,9 @@ export async function POST(req:Request){
     const chosen:typeof ranked=[];
     const add=(x:(typeof ranked)[number]|undefined)=>{if(x&&!chosen.some(c=>c.destination===x.destination))chosen.push(x)};
     add(fits.find(x=>x.total>=search.budget*.72));
+    add(fits.find(x=>x.discovery&&x.total>=search.budget*.45));
     add(fits.find(x=>x.total>=search.budget*.48&&x.total<search.budget*.72));
+    // Preserve one clear value alternative without letting cheap trips dominate.
     add(fits.find(x=>x.total<search.budget*.48));
     add(fits.find(x=>x.discovery));
     for(const trip of ranked)add(trip);
