@@ -171,3 +171,5 @@ nav .navActive{background:#173f31;color:#fff;border-radius:999px;padding:8px 12p
 .tripHighlights{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}.tripHighlights span{font-size:8.5px;font-weight:750;padding:4px 7px;border-radius:999px;background:#f1eee5;color:#526058}
 
 .vacationPlan{margin:18px 0;padding:17px 18px;border:1px solid #e7e1d5;border-radius:15px;background:#fff}.vacationPlan>span{display:block;font-size:9px;font-weight:900;letter-spacing:.13em;color:#718078}.vacationPlan h4{font-family:Georgia,serif;font-size:20px;margin:4px 0 5px}.vacationPlan p{font-size:11px;line-height:1.5;color:#69736e;margin:0 0 10px}.vacationPlan>div{display:flex;gap:6px;flex-wrap:wrap}.vacationPlan>div b{font-size:9px;font-weight:800;background:#f2f0e9;padding:6px 8px;border-radius:999px}
+
+.surprisePlace{display:block;font-size:9px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;opacity:.72;margin-bottom:4px}.surpriseHighlights{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin:10px auto}.surpriseHighlights b{font-size:9px;padding:5px 8px;border-radius:999px;background:rgba(255,255,255,.14);font-weight:800}
