@@ -14,11 +14,20 @@ export async function POST(req:Request){
   }
 
   const normalizedOrigin=search.origin.toLowerCase();
-  const isHoustonOrigin=/houston|friendswood|webster|clear lake|pearland|league city|galveston bay/.test(normalizedOrigin);
-  // A budget-first vacation product should create escape value. Nearby Texas
-  // cities are useful for a dedicated local/weekend mode, but should not crowd
-  // the primary vacation marketplace for Houston-area travelers.
-  const profiles=matchingDestinations(search.vibe).filter(p=>!(isHoustonOrigin&&p.houstonLocal));
+  // Demo geography is intentionally conservative: detect only regions we can
+  // identify confidently from free-form origin text. Live inventory/geocoding
+  // will replace this with actual origin-to-destination distance and travel time.
+  const originRegion=/\b(tx|texas)\b|houston|friendswood|webster|clear lake|pearland|league city|galveston/.test(normalizedOrigin)?"Texas":
+   /\b(ca|california)\b|los angeles|san diego|san francisco|sacramento|san jose/.test(normalizedOrigin)?"California":
+   /\b(fl|florida)\b|miami|orlando|tampa|jacksonville/.test(normalizedOrigin)?"Florida":undefined;
+  const escapeWorthy=(p:ReturnType<typeof matchingDestinations>[number])=>{
+   if(!originRegion||p.region!==originRegion)return true;
+   // Short trips can legitimately be regional getaways. Longer vacations
+   // should create more separation from home instead of filling results with
+   // familiar same-region cities merely because they are inexpensive.
+   return search.days<=2;
+  };
+  const profiles=matchingDestinations(search.vibe).filter(escapeWorthy);
   const destinations=profiles.map(d=>d.name);
   const profileMap=new Map(profiles.map(d=>[d.name,d]));
   const [flights,stays]=await Promise.all([
