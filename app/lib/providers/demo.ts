@@ -52,6 +52,10 @@ export const destinationProfiles:DestinationProfile[]=[
 {name:"Oaxaca",conceptTitle:"Food + culture escape",stayStyle:"Boutique stay near Centro",highlights:["Oaxacan food","Markets + craft","Historic streets"],country:"Mexico",vibes:["Culture","City"],transport:820,stay:720,tag:"Food + mezcal country",emoji:"🌵",discovery:true,costLevel:"value",image:"https://source.unsplash.com/1600x1000/?Oaxaca%2C%20travel%2C%20landmark",imageAlt:"Travel view of Oaxaca"}
 ];
 
+/**
+ * Prototype catalog only. Production discovery must come from broad supplier /
+ * geographic inventory; this list exists to exercise ranking and UX safely.
+ */
 export function matchingDestinations(vibe?:string){
  return destinationProfiles.filter(d=>!vibe||vibe==="Any"||d.vibes.includes(vibe));
 }
