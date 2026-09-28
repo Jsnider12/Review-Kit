@@ -165,3 +165,5 @@ nav .navActive{background:#173f31;color:#fff;border-radius:999px;padding:8px 12p
 @media(max-width:640px){.compareGrid{grid-template-columns:1fr}.compareHeading{align-items:flex-start;flex-wrap:wrap}.compareHeading button{margin-left:0}.cardActions .compareBtn{min-height:44px}}
 
 .surpriseReason{width:min(520px,90%);margin:14px auto 2px;padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.12);backdrop-filter:blur(8px);text-align:left}.surpriseReason>span{font-size:8px;font-weight:900;letter-spacing:.14em;opacity:.68}.surpriseReason p{font-size:11px;line-height:1.5;margin:5px 0 9px}.surpriseReason>div{display:flex;gap:6px;flex-wrap:wrap}.surpriseReason>div b{font-size:9px;padding:5px 8px;border:1px solid rgba(255,255,255,.25);border-radius:999px}
+
+.accountGhost{border:1px solid rgba(23,63,49,.14);background:transparent;color:#173f31;border-radius:999px;padding:7px 11px;font-size:10px;font-weight:800}.accountGhost:hover{background:#f3f1e9}
