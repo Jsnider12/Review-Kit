@@ -1,4 +1,4 @@
-import type {InventoryProvider,InventoryQuote,TripSearch} from "../trip-engine";
+import type {DestinationDiscoveryProvider,InventoryProvider,InventoryQuote,TripSearch} from "../trip-engine";
 
 export type DestinationProfile={name:string;country:string;vibes:string[];transport:number;stay:number;tag:string;emoji:string;image:string;imageAlt:string;discovery?:boolean;costLevel?:"value"|"standard"|"premium"|"luxury";region?:string;conceptTitle?:string;stayStyle?:string;highlights?:string[]};
 export const destinationProfiles:DestinationProfile[]=[
@@ -81,6 +81,12 @@ const originAdjustedTransport=(p:DestinationProfile,origin:string)=>{
  if(from===to)return Math.round(p.transport*.72);
  const factors:Record<string,number>={"gulf:west":1.28,"west:gulf":1.28,"gulf:northeast":1.18,"northeast:gulf":1.12,"west:northeast":1.38,"northeast:west":1.38,"west:southeast":1.42,"southeast:west":1.42,"southeast:northeast":1.08,"northeast:southeast":1.08,"central:west":1.14,"west:central":1.14,"central:northeast":1.08,"northeast:central":1.08,"central:southeast":1.08,"southeast:central":1.08};
  return Math.round(p.transport*(factors[`${from}:${to}`]??1));
+};
+
+export const demoDiscoveryProvider:DestinationDiscoveryProvider={
+ async discover(search:TripSearch){
+  return matchingDestinations(search.vibe).map(d=>({name:d.name,country:d.country,region:d.region,vibes:d.vibes}));
+ }
 };
 
 export const demoProvider:InventoryProvider={
