@@ -88,3 +88,7 @@ nav .navActive{background:#173f31;color:#fff;border-radius:999px;padding:8px 12p
 .upgradeRoom{margin:14px 0 18px;padding:15px 16px;border-radius:14px;background:#f5efe1;border:1px solid rgba(98,74,0,.1);display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center}
 .upgradeRoom>div{display:flex;flex-direction:column}.upgradeRoom span{font-size:8px;font-weight:900;letter-spacing:.12em;opacity:.6}.upgradeRoom b{font-size:25px;color:#173f31}.upgradeRoom small{font-size:9px;opacity:.62}.upgradeRoom p{margin:0;font-size:11px;line-height:1.5;opacity:.7}
 @media(max-width:640px){.upgradeRoom{grid-template-columns:1fr;gap:7px}}
+
+.destinationPlaceholder{flex-direction:column;gap:3px;color:#173f31;text-align:center;opacity:.7}
+.destinationPlaceholder b{font-family:Georgia,serif;font-size:22px}.destinationPlaceholder small{font-size:9px;text-transform:uppercase;letter-spacing:.1em;font-weight:850}
+.modalHero.noPhoto{background:linear-gradient(145deg,#507568,#173f31)}
