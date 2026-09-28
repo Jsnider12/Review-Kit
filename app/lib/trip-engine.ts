@@ -13,7 +13,7 @@ const matchesSearch=(q:InventoryQuote,search:TripSearch)=>{
  }
  return true;
 };
-export type VacationCandidate={destination:string;country:string;transport:number;stay:number;food:number;local:number;activities:number;buffer:number;total:number;confidence:"estimate"|"mixed"|"live";sources:string[];discovery?:boolean};
+export type VacationCandidate={destination:string;country:string;transport:number;stay:number;food:number;local:number;activities:number;buffer:number;total:number;confidence:"estimate"|"mixed"|"live";sources:string[];discovery?:boolean;qualityScore?:number};
 
 export interface InventoryProvider {
   searchFlights?(search:TripSearch,destinations:string[]):Promise<InventoryQuote[]>;
@@ -47,7 +47,8 @@ export function assembleVacation(search:TripSearch,destination:string,quotes:Inv
  const buffer=Math.max(100,Math.round((transport+lodging+food+local+activities)*(costs.bufferRate??.08)));
  const total=transport+lodging+food+local+activities+buffer;
  const liveCount=[flight,stay].filter(q=>q.live).length;
- return {destination,country:"",transport,stay:lodging,food,local,activities,buffer,total,confidence:liveCount===2?"live":liveCount===1?"mixed":"estimate",sources:[flight?.provider,stay?.provider].filter(Boolean) as string[]};
+ const qualityScore=Math.round(((flight.qualityScore??50)+(stay.qualityScore??50))/2);
+ return {destination,country:"",transport,stay:lodging,food,local,activities,buffer,total,confidence:liveCount===2?"live":liveCount===1?"mixed":"estimate",sources:[flight.provider,stay.provider],qualityScore};
 }
 
 export function rankVacations(search:TripSearch,candidates:VacationCandidate[]){
@@ -57,7 +58,8 @@ export function rankVacations(search:TripSearch,candidates:VacationCandidate[]){
   const spendFit=ratio<=1?100-Math.abs(.82-ratio)*90:55-Math.min(45,(ratio-1)*180);
   const discoveryBonus=trip.discovery?6:0;
   const confidenceBonus=trip.confidence==="live"?8:trip.confidence==="mixed"?4:0;
-  return spendFit+discoveryBonus+confidenceBonus;
+  const qualityBonus=Math.max(-6,Math.min(10,((trip.qualityScore??50)-50)/5));
+  return spendFit+discoveryBonus+confidenceBonus+qualityBonus;
  };
  return [...candidates].sort((a,b)=>score(b)-score(a)||a.total-b.total);
 }
