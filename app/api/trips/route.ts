@@ -32,6 +32,7 @@ export async function POST(req:Request){
     const ceiling=search.budget*1.25;
     const relevant=ranked.filter(x=>x.total<=ceiling);
     const fits=relevant.filter(x=>x.total<=search.budget);
+    const stretches=relevant.filter(x=>x.total>search.budget);
     if(!relevant.length)return [];
     // If nothing fits, show only a few nearby stretch ideas rather than a wall
     // of over-budget vacations. The UI can then invite a budget/date adjustment.
@@ -44,7 +45,10 @@ export async function POST(req:Request){
     // Preserve one clear value alternative without letting cheap trips dominate.
     add(fits.find(x=>x.total<search.budget*.48));
     add(fits.find(x=>x.discovery));
-    for(const trip of relevant)add(trip);
+    // Fill primarily with vacations that actually fit. Include at most two
+    // nearby stretch ideas, and only after the useful in-budget choices.
+    for(const trip of fits)add(trip);
+    for(const trip of stretches.slice(0,2))add(trip);
     return chosen.slice(0,12);
    })()
   });
