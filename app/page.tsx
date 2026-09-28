@@ -18,11 +18,11 @@ return <main>
 <section className="trust"><div><b>One budget.</b><span>We price the whole trip.</span></div><div><b>Domestic + international.</b><span>Compare side by side.</span></div><div><b>Transparent pricing.</b><span>Live vs. estimated stays clear.</span></div></section>
 {searched ? (
 <section className="results">
-<div className="resultHead"><div><span className="eyebrow">BEST FITS FROM {origin.toUpperCase()}</span><h2>Here’s what <em>{"$"+budget.toLocaleString()}</em> can do.</h2></div><div><small>YOUR BUDGET</small><strong>{"$"+budget.toLocaleString()}</strong></div></div>
+<div className="resultHead"><div><span className="eyebrow">BEST FITS FROM {origin.toUpperCase()}</span><h2>Here’s what <em>{"$"+budget.toLocaleString()}</em> can do.</h2><p className="searchSummary">{travelers} traveler{travelers===1?"":"s"} · {days} days · {dateMode==="Exact"&&startDate?new Date(startDate+"T12:00:00").toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}):"flexible dates"} · {vibe==="Any"?"any travel style":vibe.toLowerCase()}</p></div><div><small>YOUR BUDGET</small><strong>{"$"+budget.toLocaleString()}</strong></div></div>
 <div className="resultTools"><span>{loading?"Searching vacation possibilities…":results.length+" vacation ideas matched"}</span><span>Validation pricing</span></div>
 {!loading&&results.length>0&&<div className="resultIntro"><span>CURATED FOR YOUR BUDGET</span><p>Not an endless list. These are the strongest complete-trip fits we found for your budget, trip length and travel style.</p></div>}
 {!loading&&results.length>0&&<div className="discoveryBar"><div><small>QUICK EXPLORE</small><b>{affordable} fit your budget{stretch>0?" · "+stretch+" more are close":""}</b></div><button onClick={()=>void exploreBudget(budget+300)}>What does +$300 unlock?</button><button onClick={()=>void surprise()}>Pick one for me ✦</button></div>}
-<div className="cards">
+{!loading&&results.length===0?<div className="emptyTrips"><span>✦</span><h3>No strong matches yet.</h3><p>Try a little more budget, a shorter trip, or a different travel style. We’d rather show you nothing than pretend a weak trip is a good fit.</p><button onClick={()=>void exploreBudget(budget+300)}>Try +$300 →</button></div>:<div className="cards">
 {results.map((t,i)=>{
 const left=budget-t.total;
 const isSaved=saved.includes(t.id);
@@ -39,7 +39,7 @@ return <article className="card" key={t.id}>
 <div className="cardActions"><button className="view" onClick={()=>setSelected(t)}>Explore this trip →</button></div>
 </div>
 </article>})}
-</div>
+</div>}
 </section>
 ) : (
 <section className="explain"><span className="eyebrow">BUDGET-FIRST TRAVEL</span><h2>Shop the <em>whole vacation.</em></h2><p>Tell us what you want to spend. We’ll show you where that budget can take you.</p></section>
