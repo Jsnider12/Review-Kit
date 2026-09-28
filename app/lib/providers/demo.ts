@@ -23,7 +23,12 @@ export const destinationProfiles:DestinationProfile[]=[
 {name:"London",country:"United Kingdom",vibes:["City","Culture"],transport:1580,stay:1640,tag:"Classic city escape",emoji:"🇬🇧"},
 {name:"Paris",country:"France",vibes:["City","Culture"],transport:1660,stay:1720,tag:"Food + iconic streets",emoji:"🇫🇷"},
 {name:"Rome",country:"Italy",vibes:["Culture","City"],transport:1720,stay:1540,tag:"History + food",emoji:"🇮🇹"},
-{name:"Reykjavík",country:"Iceland",vibes:["Adventure","Outdoors"],transport:1420,stay:1480,tag:"Fire + ice",emoji:"🇮🇸"}
+{name:"Reykjavík",country:"Iceland",vibes:["Adventure","Outdoors"],transport:1420,stay:1480,tag:"Fire + ice",emoji:"🇮🇸"},
+{name:"Bora Bora",country:"French Polynesia",vibes:["Beach"],transport:4200,stay:6200,tag:"Overwater escape",emoji:"🌊"},
+{name:"Maldives",country:"Maldives",vibes:["Beach"],transport:3900,stay:5900,tag:"Private island retreat",emoji:"🏝️"},
+{name:"Tokyo",country:"Japan",vibes:["City","Culture"],transport:2400,stay:2500,tag:"Food + discovery",emoji:"🗼"},
+{name:"Amalfi Coast",country:"Italy",vibes:["Beach","Culture"],transport:2500,stay:3900,tag:"Italian coast",emoji:"🍋"},
+{name:"Swiss Alps",country:"Switzerland",vibes:["Outdoors","Adventure"],transport:2600,stay:4100,tag:"Alpine escape",emoji:"🏔️"}
 ];
 
 export function matchingDestinations(vibe?:string){
