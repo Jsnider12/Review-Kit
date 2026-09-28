@@ -1,1 +1,16 @@
-import "./globals.css"; export const metadata={title:"Roamwithin — Vacations that fit your budget",description:"Start with your budget and discover complete vacations you can actually take."}; export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="en"><body>{children}</body></html>}
+import "./globals.css";
+
+export const metadata={
+  title:"Roamwithin — See where your budget can take you",
+  description:"Start with what you want to spend and discover complete vacations built around your total trip budget.",
+  robots:{index:false,follow:false},
+  openGraph:{
+    title:"Roamwithin — See where your budget can take you",
+    description:"Flights, stays and on-trip spending considered together around one number.",
+    type:"website"
+  }
+};
+
+export default function RootLayout({children}:{children:React.ReactNode}){
+  return <html lang="en"><body>{children}</body></html>;
+}
