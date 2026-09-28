@@ -6,3 +6,18 @@ button:disabled{opacity:.58;cursor:not-allowed}
 .primary,.surprise,.vibes button,.dates button,.view,.heart{transition:transform .16s ease,box-shadow .16s ease,background .16s ease,border-color .16s ease}
 @media (hover:hover){.primary:not(:disabled):hover,.view:hover{transform:translateY(-1px)}.card:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(34,54,44,.11)}}
 .card{transition:transform .2s ease,box-shadow .2s ease}
+
+.card:focus-visible{outline:3px solid rgba(23,63,49,.22);outline-offset:3px}
+.top .experience{margin:3px 0 4px;color:#314d40;font-size:11px;font-weight:800}
+@media(max-width:640px){
+ .results{padding-left:16px;padding-right:16px}
+ .cards{grid-template-columns:1fr}
+ .card{border-radius:16px}
+ .body{padding:16px}
+ .top{align-items:flex-start}
+ .top h3{font-size:22px}
+ .price b{font-size:21px}
+ .breakdown{gap:4px}
+ .breakdown span{padding:9px 5px}
+ .view{min-height:44px}
+}
