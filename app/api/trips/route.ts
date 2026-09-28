@@ -27,11 +27,17 @@ export async function POST(req:Request){
   ]);
   const quotes=[...flights,...stays].filter(q=>q&&typeof q.destination==="string"&&q.destination.trim()&&Number.isFinite(q.amount)&&q.amount>0&&(q.kind==="flight"||q.kind==="stay"));
   const results=destinations.map(destination=>{const profile=profileMap.get(destination);const trip=assembleVacation(search,destination,quotes,profile?onTripCosts(profile):{});return trip?{...trip,country:profile?.country??"",tag:profile?.tag??"Trip idea",emoji:profile?.emoji??"✦",vibes:profile?.vibes??[],discovery:profile?.discovery??false,image:profile?.image??"",imageAlt:profile?.imageAlt??""}:null}).filter(x=>x!==null);
-  const rouletteFits=rankVacations(search,results).filter(x=>x.total<=search.budget);
+  const rankedForDiscovery=rankVacations(search,results);
+  // Surprise Me should feel aspirational, not like a random cheap result.
+  // Prefer trips that use a meaningful share of the user's spend, then broaden
+  // only when the search would otherwise have too little variety.
+  const strongRoulette=rankedForDiscovery.filter(x=>x.total<=search.budget&&x.total>=search.budget*.48);
+  const rouletteFits=strongRoulette.length>=5?strongRoulette:rankedForDiscovery.filter(x=>x.total<=search.budget&&x.total>=search.budget*.35);
   const roulette:(typeof rouletteFits)=[]; const addRoulette=(x:(typeof rouletteFits)[number]|undefined)=>{if(x&&!roulette.some(r=>r.destination===x.destination))roulette.push(x)};
   // Build a varied spin: exciting/discovery and travel-style diversity first,
   // then fill with the strongest remaining budget fits.
-  addRoulette(rouletteFits.find(x=>x.discovery));
+  addRoulette(rouletteFits.find(x=>x.discovery&&x.total>=search.budget*.62));
+  addRoulette(rouletteFits.find(x=>x.total>=search.budget*.72));
   for(const style of ["Beach","Adventure","Culture","City","Outdoors","Nightlife"])addRoulette(rouletteFits.find(x=>profileMap.get(x.destination)?.vibes.includes(style)));
   for(const trip of rouletteFits.filter(x=>x.discovery))addRoulette(trip);
   for(const trip of rouletteFits)addRoulette(trip);
