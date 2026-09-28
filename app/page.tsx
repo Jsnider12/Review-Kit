@@ -40,7 +40,7 @@ return <main>
 <section className="results">
 <div className="resultHead"><div><span className="eyebrow">BEST FITS FROM {origin.toUpperCase()}</span><h2>Here’s what <em>{"$"+budget.toLocaleString()}</em> can do.</h2><p className="searchSummary">{travelers} traveler{travelers===1?"":"s"} · {days} days · {dateMode==="Exact"&&startDate?new Date(startDate+"T12:00:00").toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}):"flexible dates"} · {vibe==="Any"?"any travel style":vibe.toLowerCase()}</p></div><div><small>YOUR BUDGET</small><strong>{"$"+budget.toLocaleString()}</strong></div></div>
 <div className="resultTools"><span>{loading?"Searching vacation possibilities…":showSaved?saved.length+" saved vacation"+(saved.length===1?"":"s"):results.length+" vacation ideas matched"}</span><span>{showSaved?<button className="showAll" onClick={()=>setShowSaved(false)}>Show all trips</button>:"Validation pricing"}</span></div>
-{!loading&&results.length>0&&<div className="resultIntro"><span>CURATED FOR YOUR BUDGET</span><p>Not an endless list. These are the strongest complete-trip fits we found for your budget, trip length and travel style.</p></div>}
+{!loading&&results.length>0&&<div className="resultIntro"><span>CURATED FOR YOUR BUDGET</span><p>Not an endless list. These are complete vacations worth considering—not nearby places added just because they happen to fit the number.</p></div>}
 {!loading&&results.length>0&&<div className="discoveryBar"><div><small>QUICK EXPLORE</small><b>{affordable} fit your budget{stretch>0?" · "+stretch+" more are close":""}</b></div><button onClick={()=>void exploreBudget(budget+300)}>What does +$300 unlock?</button><button onClick={()=>void surprise()}>Pick one for me ✦</button></div>}
 {!loading&&showSaved&&visibleResults.length===0?<div className="emptyTrips"><span>♡</span><h3>No saved trips yet.</h3><p>Tap the heart on any vacation you want to keep comparing. Your shortlist will appear here.</p><button onClick={()=>setShowSaved(false)}>Browse all trips →</button></div>:!loading&&results.length===0?<div className="emptyTrips"><span>✦</span><h3>No strong matches yet.</h3><p>Try a little more budget, a shorter trip, or a different travel style. We’d rather show you nothing than pretend a weak trip is a good fit.</p><button onClick={()=>void exploreBudget(budget+300)}>Try +$300 →</button></div>:<div className="cards">
 {visibleResults.map((t,i)=>{
@@ -48,7 +48,7 @@ const left=budget-t.total;
 const isSaved=saved.includes(t.id);
 return <article className="card" key={t.id}>
 <div className="visual photo" style={t.image||legacyDestinationImage(t.place)?{backgroundImage:`linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,.52)),url("${t.image||legacyDestinationImage(t.place)}")`}:undefined}>
-<span className="rank">#${i+1} MATCH</span>
+<span className="rank">{i===0?"BEST FIT":t.discovery?"DISCOVERY PICK":"VACATION PICK"}</span>
 <button className={"heart "+(isSaved?"saved":"")} aria-label={isSaved?"Remove saved trip":"Save trip"} onClick={()=>setSaved(v=>isSaved?v.filter(id=>id!==t.id):[...v,t.id])}>{isSaved?"♥":"♡"}</button>
 <span className="photoTag">{t.discovery?"Unexpected pick · "+t.tag:t.tag}</span>{!(t.image||legacyDestinationImage(t.place))&&<span className="destinationPlaceholder"><b>{t.place}</b><small>Destination photo unavailable</small></span>}
 </div>
