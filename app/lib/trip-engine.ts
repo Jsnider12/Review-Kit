@@ -16,14 +16,16 @@ export interface InventoryProvider {
 export function assembleVacation(search:TripSearch,destination:string,quotes:InventoryQuote[],costs:OnTripCostProfile={}):VacationCandidate|null{
  const flight=quotes.filter(q=>q.destination===destination&&q.kind==="flight").sort((a,b)=>a.amount-b.amount)[0];
  const stay=quotes.filter(q=>q.destination===destination&&q.kind==="stay").sort((a,b)=>a.amount-b.amount)[0];
- if(!flight&&!stay)return null;
- const transport=flight?.amount??0, lodging=stay?.amount??0;
+ // A complete vacation cannot silently treat a missing core component as free.
+ // Ground-trip support can be modeled explicitly later; flight-based candidates require both.
+ if(!flight||!stay)return null;
+ const transport=flight.amount, lodging=stay.amount;
  const food=Math.round(search.days*search.travelers*(costs.foodPerPersonDay??55));
  const local=Math.round(search.days*(costs.localPerDay??38));
  const activities=Math.round(search.days*search.travelers*(costs.activitiesPerPersonDay??45));
  const buffer=Math.max(100,Math.round((transport+lodging+food+local+activities)*(costs.bufferRate??.08)));
  const total=transport+lodging+food+local+activities+buffer;
- const liveCount=[flight,stay].filter(Boolean).filter(q=>q?.live).length;
+ const liveCount=[flight,stay].filter(q=>q.live).length;
  return {destination,country:"",transport,stay:lodging,food,local,activities,buffer,total,confidence:liveCount===2?"live":liveCount===1?"mixed":"estimate",sources:[flight?.provider,stay?.provider].filter(Boolean) as string[]};
 }
 
