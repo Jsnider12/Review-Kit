@@ -13,7 +13,12 @@ export async function POST(req:Request){
    return NextResponse.json({error:"Invalid trip search."},{status:400});
   }
 
-  const profiles=matchingDestinations(search.vibe);
+  const normalizedOrigin=search.origin.toLowerCase();
+  const isHoustonOrigin=/houston|friendswood|webster|clear lake|pearland|league city|galveston bay/.test(normalizedOrigin);
+  // A budget-first vacation product should create escape value. Nearby Texas
+  // cities are useful for a dedicated local/weekend mode, but should not crowd
+  // the primary vacation marketplace for Houston-area travelers.
+  const profiles=matchingDestinations(search.vibe).filter(p=>!(isHoustonOrigin&&p.houstonLocal));
   const destinations=profiles.map(d=>d.name);
   const profileMap=new Map(profiles.map(d=>[d.name,d]));
   const [flights,stays]=await Promise.all([
