@@ -82,3 +82,5 @@ nav .navActive{background:#173f31;color:#fff;border-radius:999px;padding:8px 12p
 .visual.photo:not([style]){background:linear-gradient(145deg,#dcebe4,#b8d5ca)}
 .destinationPlaceholder{position:absolute;inset:0;display:grid;place-items:center;font-size:54px;opacity:.5;pointer-events:none}
 .modalHero:not([style]){background:linear-gradient(145deg,#315f50,#173f31)}
+
+.discoveryRank{background:#fff4c8!important;color:#624a00!important}
