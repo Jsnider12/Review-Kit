@@ -18,11 +18,11 @@ export async function POST(req:Request){
    demoProvider.searchStays?.(search,destinations)??[]
   ]);
   const quotes=[...flights,...stays];
-  const results=destinations.map(destination=>{const trip=assembleVacation(search,destination,quotes);const profile=profileMap.get(destination);return trip?{...trip,country:profile?.country??"",tag:profile?.tag??"Trip idea",emoji:profile?.emoji??"✦",vibes:profile?.vibes??[]}:null}).filter(x=>x!==null);
+  const results=destinations.map(destination=>{const trip=assembleVacation(search,destination,quotes);const profile=profileMap.get(destination);return trip?{...trip,country:profile?.country??"",tag:profile?.tag??"Trip idea",emoji:profile?.emoji??"✦",vibes:profile?.vibes??[],discovery:profile?.discovery??false}:null}).filter(x=>x!==null);
   return NextResponse.json({
    mode:"demo",
    notice:"Validation estimates — live provider adapters are not enabled yet.",
-   results:rankVacations(search,results)
+   results:(()=>{const ranked=rankVacations(search,results);const discoveries=ranked.filter(x=>x.discovery&&x.total<=search.budget);if(!discoveries.length)return ranked;const pick=discoveries[0];const rest=ranked.filter(x=>x.destination!==pick.destination);return [...rest.slice(0,3),pick,...rest.slice(3)];})()
   });
  }catch{
   return NextResponse.json({error:"Unable to build trips."},{status:500});
