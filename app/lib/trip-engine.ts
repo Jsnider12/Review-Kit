@@ -15,6 +15,12 @@ const matchesSearch=(q:InventoryQuote,search:TripSearch)=>{
 };
 export type VacationCandidate={destination:string;country:string;transport:number;stay:number;food:number;local:number;activities:number;buffer:number;total:number;confidence:"estimate"|"mixed"|"live";sources:string[];discovery?:boolean;qualityScore?:number};
 
+export type DestinationOption={name:string;country:string;region?:string;vibes?:string[]};
+
+export interface DestinationDiscoveryProvider {
+ discover(search:TripSearch):Promise<DestinationOption[]>;
+}
+
 export interface InventoryProvider {
   searchFlights?(search:TripSearch,destinations:string[]):Promise<InventoryQuote[]>;
   searchStays?(search:TripSearch,destinations:string[]):Promise<InventoryQuote[]>;
