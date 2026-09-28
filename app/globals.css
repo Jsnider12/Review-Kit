@@ -71,3 +71,10 @@ button:disabled{opacity:.58;cursor:not-allowed}
 
 nav .navActive{background:#173f31;color:#fff;border-radius:999px;padding:8px 12px}
 .showAll{border:0;background:transparent;color:#173f31;font-weight:850;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px}
+
+.budgetPresets{display:flex;justify-content:center;align-items:center;gap:7px;margin:12px auto 4px;flex-wrap:wrap}
+.budgetPresets>span{font-size:9px;font-weight:900;letter-spacing:.12em;opacity:.5;margin-right:3px}
+.budgetPresets button{border:1px solid rgba(23,63,49,.14);background:rgba(255,255,255,.75);border-radius:999px;padding:7px 10px;color:#173f31;font-size:11px;font-weight:800;cursor:pointer}
+.budgetPresets button.active{background:#173f31;color:#fff;border-color:#173f31}
+.heroHint{text-align:center;margin:8px 0 0!important;font-size:11px!important;opacity:.52}
+@media(max-width:640px){.budgetPresets{justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;padding:0 2px 4px}.budgetPresets button{flex:0 0 auto}}
