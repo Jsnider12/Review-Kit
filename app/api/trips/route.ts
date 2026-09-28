@@ -20,7 +20,7 @@ export async function POST(req:Request){
    demoProvider.searchFlights?.(search,destinations)??[],
    demoProvider.searchStays?.(search,destinations)??[]
   ]);
-  const quotes=[...flights,...stays];
+  const quotes=[...flights,...stays].filter(q=>q&&typeof q.destination==="string"&&q.destination.trim()&&Number.isFinite(q.amount)&&q.amount>0&&(q.kind==="flight"||q.kind==="stay"));
   const results=destinations.map(destination=>{const profile=profileMap.get(destination);const trip=assembleVacation(search,destination,quotes,profile?onTripCosts(profile):{});return trip?{...trip,country:profile?.country??"",tag:profile?.tag??"Trip idea",emoji:profile?.emoji??"✦",vibes:profile?.vibes??[],discovery:profile?.discovery??false}:null}).filter(x=>x!==null);
   return NextResponse.json({
    mode:"demo",
