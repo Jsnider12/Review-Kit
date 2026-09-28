@@ -1,21 +1,21 @@
 import type {InventoryProvider,InventoryQuote,TripSearch} from "../trip-engine";
 
-export type DestinationProfile={name:string;country:string;vibes:string[];transport:number;stay:number};
+export type DestinationProfile={name:string;country:string;vibes:string[];transport:number;stay:number;tag:string;emoji:string};
 export const destinationProfiles:DestinationProfile[]=[
-{name:"New Orleans",country:"USA",vibes:["Culture","City"],transport:0,stay:438},
-{name:"Cancún",country:"Mexico",vibes:["Beach"],transport:520,stay:690},
-{name:"Denver",country:"USA",vibes:["Adventure","City"],transport:410,stay:585},
-{name:"Big Bend",country:"USA",vibes:["Outdoors","Adventure"],transport:240,stay:520},
-{name:"San Juan",country:"Puerto Rico",vibes:["Beach","Culture"],transport:650,stay:760},
-{name:"Nashville",country:"USA",vibes:["Culture","Nightlife"],transport:365,stay:510},
-{name:"Destin",country:"USA",vibes:["Beach"],transport:310,stay:760},
-{name:"Las Vegas",country:"USA",vibes:["Nightlife","City"],transport:390,stay:590},
-{name:"Mexico City",country:"Mexico",vibes:["Culture","City"],transport:490,stay:540},
-{name:"Guanacaste",country:"Costa Rica",vibes:["Beach","Adventure"],transport:720,stay:820},
-{name:"San Diego",country:"USA",vibes:["Beach","City"],transport:520,stay:880},
-{name:"Great Smoky Mountains",country:"USA",vibes:["Outdoors","Adventure"],transport:280,stay:690},
-{name:"New York City",country:"USA",vibes:["City","Culture"],transport:560,stay:1120},
-{name:"Chicago",country:"USA",vibes:["City","Culture"],transport:420,stay:720}
+{name:"New Orleans",country:"USA",vibes:["Culture","City"],transport:0,stay:438,tag:"Food + culture",emoji:"⚜️"},
+{name:"Cancún",country:"Mexico",vibes:["Beach"],transport:520,stay:690,tag:"Caribbean escape",emoji:"🌴"},
+{name:"Denver",country:"USA",vibes:["Adventure","City"],transport:410,stay:585,tag:"Mountains + city",emoji:"🏔️"},
+{name:"Big Bend",country:"USA",vibes:["Outdoors","Adventure"],transport:240,stay:520,tag:"Desert road trip",emoji:"🌵"},
+{name:"San Juan",country:"Puerto Rico",vibes:["Beach","Culture"],transport:650,stay:760,tag:"Island + old city",emoji:"🌊"},
+{name:"Nashville",country:"USA",vibes:["Culture","Nightlife"],transport:365,stay:510,tag:"Music weekend",emoji:"🎸"},
+{name:"Destin",country:"USA",vibes:["Beach"],transport:310,stay:760,tag:"Gulf beach",emoji:"☀️"},
+{name:"Las Vegas",country:"USA",vibes:["Nightlife","City"],transport:390,stay:590,tag:"Entertainment",emoji:"🎲"},
+{name:"Mexico City",country:"Mexico",vibes:["Culture","City"],transport:490,stay:540,tag:"Food + design",emoji:"🌮"},
+{name:"Guanacaste",country:"Costa Rica",vibes:["Beach","Adventure"],transport:720,stay:820,tag:"Beach + adventure",emoji:"🦥"},
+{name:"San Diego",country:"USA",vibes:["Beach","City"],transport:520,stay:880,tag:"Coast + city",emoji:"🌅"},
+{name:"Great Smoky Mountains",country:"USA",vibes:["Outdoors","Adventure"],transport:280,stay:690,tag:"Cabin + outdoors",emoji:"🌲"},
+{name:"New York City",country:"USA",vibes:["City","Culture"],transport:560,stay:1120,tag:"Big city energy",emoji:"🗽"},
+{name:"Chicago",country:"USA",vibes:["City","Culture"],transport:420,stay:720,tag:"Food + architecture",emoji:"🏙️"}
 ];
 
 export function matchingDestinations(vibe?:string){
