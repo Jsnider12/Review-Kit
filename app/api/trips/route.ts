@@ -22,9 +22,11 @@ export async function POST(req:Request){
   ]);
   const quotes=[...flights,...stays].filter(q=>q&&typeof q.destination==="string"&&q.destination.trim()&&Number.isFinite(q.amount)&&q.amount>0&&(q.kind==="flight"||q.kind==="stay"));
   const results=destinations.map(destination=>{const profile=profileMap.get(destination);const trip=assembleVacation(search,destination,quotes,profile?onTripCosts(profile):{});return trip?{...trip,country:profile?.country??"",tag:profile?.tag??"Trip idea",emoji:profile?.emoji??"✦",vibes:profile?.vibes??[],discovery:profile?.discovery??false}:null}).filter(x=>x!==null);
+  const roulette=rankVacations(search,results).filter(x=>x.total<=search.budget).slice(0,16);
   return NextResponse.json({
    mode:"demo",
    notice:"Validation estimates — live provider adapters are not enabled yet.",
+   roulette,
    results:(()=>{
     const ranked=rankVacations(search,results);
     // Keep discovery relevant to the spend. A modest stretch can be useful;
