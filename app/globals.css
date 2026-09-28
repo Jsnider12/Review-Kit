@@ -26,3 +26,8 @@ button:disabled{opacity:.58;cursor:not-allowed}
 .discoveryBar>div{display:flex;align-items:baseline;gap:6px;padding:0 8px;margin-right:auto}.discoveryBar>div b{font-size:20px}.discoveryBar>div span{font-size:11px;color:#68736d}
 .discoveryBar button{border:1px solid #dcd9d0;background:#f8f7f2;border-radius:999px;padding:9px 12px;font-size:11px;font-weight:800;cursor:pointer}.discoveryBar button:hover{background:#f0eee7}
 @media(max-width:640px){.discoveryBar{overflow-x:auto;justify-content:flex-start;-webkit-overflow-scrolling:touch}.discoveryBar>div{min-width:max-content}.discoveryBar button{white-space:nowrap;min-height:40px}}
+
+.total small{display:block;margin-top:5px;font-size:10px;font-weight:700;opacity:.72}
+.bookingPath{margin:16px 0 12px;padding:13px 14px;border-radius:12px;background:#f5f6f2;border:1px solid #e0e4dc}
+.bookingPath span{display:block;font-size:9px;font-weight:900;letter-spacing:.12em;color:#718077;margin-bottom:4px}
+.bookingPath b{display:block;font-size:13px;color:#243d31}.bookingPath p{margin:4px 0 0;font-size:11px;line-height:1.45;color:#68736d}
