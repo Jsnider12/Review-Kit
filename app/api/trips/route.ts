@@ -17,9 +17,22 @@ export async function POST(req:Request){
   // Demo geography is intentionally conservative: detect only regions we can
   // identify confidently from free-form origin text. Live inventory/geocoding
   // will replace this with actual origin-to-destination distance and travel time.
-  const originRegion=/\b(tx|texas)\b|houston|friendswood|webster|clear lake|pearland|league city|galveston/.test(normalizedOrigin)?"Texas":
-   /\b(ca|california)\b|los angeles|san diego|san francisco|sacramento|san jose/.test(normalizedOrigin)?"California":
-   /\b(fl|florida)\b|miami|orlando|tampa|jacksonville/.test(normalizedOrigin)?"Florida":undefined;
+  const originRules:[RegExp,string][]=[
+   [/\b(tx|texas)\b|houston|friendswood|webster|clear lake|pearland|league city|galveston/,"Texas"],
+   [/\b(ca|california)\b|los angeles|san diego|san francisco|sacramento|san jose/,"California"],
+   [/\b(fl|florida)\b|miami|orlando|tampa|jacksonville|pensacola|destin/,"Florida"],
+   [/\b(la|louisiana)\b|new orleans|lafayette/,"Louisiana"],
+   [/\b(co|colorado)\b|denver/,"Colorado"],
+   [/\b(nv|nevada)\b|las vegas/,"Nevada"],
+   [/\b(ny|new york)\b|new york city|nyc/,"New York"],
+   [/\b(il|illinois)\b|chicago/,"Illinois"],
+   [/\b(tn|tennessee)\b|nashville|memphis/,"Tennessee"],
+   [/\b(hi|hawaii)\b|honolulu|maui/,"Hawaii"],
+   [/\b(pr|puerto rico)\b|san juan/,"Puerto Rico"],
+   [/\b(ar|arkansas)\b|hot springs|little rock/,"Arkansas"],
+   [/\b(mo|missouri)\b|kansas city|st louis|st. louis/,"Missouri"]
+  ];
+  const originRegion=originRules.find(([rule])=>rule.test(normalizedOrigin))?.[1];
   const escapeWorthy=(p:ReturnType<typeof matchingDestinations>[number])=>{
    if(!originRegion||p.region!==originRegion)return true;
    // Short trips can legitimately be regional getaways. Longer vacations
