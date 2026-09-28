@@ -1,6 +1,6 @@
 import {NextResponse} from "next/server";
 import {assembleVacation,rankVacations,type TripSearch} from "../../lib/trip-engine";
-import {demoProvider,matchingDestinations,onTripCosts} from "../../lib/providers/demo";
+import {demoDiscoveryProvider,demoProvider,matchingDestinations,onTripCosts} from "../../lib/providers/demo";
 
 export async function POST(req:Request){
  try{
@@ -40,7 +40,9 @@ export async function POST(req:Request){
    // familiar same-region cities merely because they are inexpensive.
    return search.days<=2;
   };
-  const profiles=matchingDestinations(search.vibe).filter(escapeWorthy);
+  const discovered=await demoDiscoveryProvider.discover(search);
+  const discoveredNames=new Set(discovered.map(d=>d.name));
+  const profiles=matchingDestinations(search.vibe).filter(d=>discoveredNames.has(d.name)).filter(escapeWorthy);
   const destinations=profiles.map(d=>d.name);
   const profileMap=new Map(profiles.map(d=>[d.name,d]));
   const [flights,stays]=await Promise.all([
