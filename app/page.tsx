@@ -63,7 +63,7 @@ return <article className="card" key={t.id}>
 <div className="top"><div><span className="vacationKicker">{t.place} · {t.region}</span><h3>{vacationTitle(t,days)}</h3><p>{t.stayStyle||`${t.vibe} vacation`} · {travelers} traveler{travelers===1?"":"s"}</p>{t.highlights&&t.highlights.length>0&&<div className="tripHighlights">{t.highlights.slice(0,3).map(h=><span key={h}>{h}</span>)}</div>}</div><div className="price"><b>{"$"+t.total.toLocaleString()}</b><span>whole-trip estimate</span></div></div>
 <div className={"fit "+(left>=0?"under":"over")}><b>{left>=0?"$"+left.toLocaleString()+" left in your budget":"$"+Math.abs(left).toLocaleString()+" over budget"}</b><span>{left>=0?"Room for upgrades, extras or savings":"A small stretch could unlock this trip"}</span></div>
 <div className="miniBreakdown"><span><small>GET THERE</small><b>{"$"+t.transport.toLocaleString()}</b></span><span><small>STAY</small><b>{"$"+t.stay.toLocaleString()}</b></span><span><small>ON THE TRIP</small><b>{"$"+t.spend.toLocaleString()}</b></span></div><div className="tripStory vacationWhy"><span>WHY THIS TRIP</span><p>{vacationWhy(t,budget)}</p></div>
-<div className="cardActions"><button className="view" onClick={()=>setFitPreview(null);setSelected(t)}>See the vacation →</button></div>
+<div className="cardActions"><button className="view" onClick={()=>{setFitPreview(null);setSelected(t)}}>See the vacation →</button></div>
 </div>
 </article>})}
 </div>}
