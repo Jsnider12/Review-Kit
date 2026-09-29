@@ -1,6 +1,7 @@
 import {NextResponse} from "next/server";
 import {assembleVacation,rankVacations,type TripSearch} from "../../lib/trip-engine";
 import {demoDiscoveryProvider,demoProvider,matchingDestinations,onTripCosts} from "../../lib/providers/demo";
+import {resolveOriginInput} from "../../lib/origins";
 
 export async function POST(req:Request){
  try{
@@ -15,6 +16,7 @@ export async function POST(req:Request){
    return NextResponse.json({error},{status:400});
   }
 
+  search.origin=resolveOriginInput(search.origin);
   if(search.vibe&&!(["Any","Beach","Adventure","Outdoors","Culture","City","Nightlife"].includes(search.vibe)))return NextResponse.json({error:"Choose a valid travel style."},{status:400});
   const normalizedOrigin=search.origin.toLowerCase();
   // Demo geography is intentionally conservative: detect only regions we can
