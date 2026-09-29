@@ -5,8 +5,10 @@ import {resolveOriginInput} from "../../lib/origins";
 
 export async function POST(req:Request){
  try{
-  const search=await req.json() as TripSearch;
+  const search=await req.json().catch(()=>null) as TripSearch;
   if(!search||typeof search!=="object")return NextResponse.json({error:"Check your trip details and try again."},{status:400});
+  if(search.dateMode!==undefined&&search.dateMode!=="Exact"&&search.dateMode!=="Flexible")return NextResponse.json({error:"Choose flexible dates or an exact start date."},{status:400});
+  if(search.startDate!==undefined&&typeof search.startDate!=="string")return NextResponse.json({error:"Use a valid start date."},{status:400});
   const validDate=!search.startDate||(/^\d{4}-\d{2}-\d{2}$/.test(search.startDate)&&!Number.isNaN(Date.parse(search.startDate))&&new Date(search.startDate).toISOString().slice(0,10)===search.startDate);
   const exactDateValid=search.dateMode!=="Exact"||Boolean(search.startDate&&validDate);
   const today=new Date().toISOString().slice(0,10);
