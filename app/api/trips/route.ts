@@ -38,7 +38,9 @@ export async function POST(req:Request){
    [/\b(mo|missouri)\b|kansas city|st louis|st. louis/,"Missouri"]
   ];
   const originRegion=originRules.find(([rule])=>rule.test(normalizedOrigin))?.[1];
+  const originCity=search.origin.split(",")[0].replace(/\s*\([A-Z]{3}\)$/,"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLowerCase();
   const escapeWorthy=(p:ReturnType<typeof matchingDestinations>[number])=>{
+   if(p.name.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase()===originCity)return false;
    if(!originRegion||p.region!==originRegion)return true;
    // Short trips can legitimately be regional getaways. Longer vacations
    // should create more separation from home instead of filling results with

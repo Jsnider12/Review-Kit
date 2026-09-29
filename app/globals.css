@@ -191,3 +191,5 @@ nav .navActive{background:#315cff;color:#fff;border-radius:999px;padding:8px 12p
 .originInputWrap{display:flex;align-items:center;min-width:0}.planner .originInputWrap input{min-width:0;flex:1}.originClear{flex:0 0 28px;width:28px;height:28px;display:grid;place-items:center;padding:0;border:0;border-radius:50%;background:transparent;color:#62736b;font-size:23px;line-height:1}.originClear:hover{background:#eef1ed;color:#17261f}.originClear:focus-visible{outline:2px solid #315cff;outline-offset:2px}
 
 .fitSaving{display:flex;justify-content:space-between;gap:12px;border-top:1px solid #dfe7df;padding:12px 0;color:#276443;font-size:12px;font-weight:750}
+
+.saveAnnouncement{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}

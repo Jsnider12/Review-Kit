@@ -8,7 +8,7 @@ const matchesSearch=(q:InventoryQuote,search:TripSearch)=>{
  if(q.travelers!==undefined&&q.travelers!==search.travelers)return false;
  if(search.dateMode==="Exact"&&search.startDate){
   if(q.startDate&&q.startDate!==search.startDate)return false;
-  const expectedEnd=addDays(search.startDate,search.days);
+  const expectedEnd=addDays(search.startDate,Math.max(1,search.days-1));
   if(q.kind==="stay"&&q.endDate&&q.endDate!==expectedEnd)return false;
  }
  return true;
