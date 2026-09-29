@@ -174,3 +174,14 @@ nav .navActive{background:#315cff;color:#fff;border-radius:999px;padding:8px 12p
 .overlay .modal,.overlay .rouletteModal{max-height:calc(100vh - 36px);max-height:calc(100dvh - 36px);overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
 .overlay .modal .close,.overlay .rouletteModal .close{position:sticky;top:0;float:right;z-index:6;width:40px;height:40px;margin:-16px -16px -24px 0;border-radius:50%;background:#fff;color:#17202a;box-shadow:0 3px 12px rgba(0,0,0,.15);line-height:1}
 @media(max-width:640px){.overlay{padding:10px}.overlay .modal,.overlay .rouletteModal{max-height:calc(100vh - 20px);max-height:calc(100dvh - 20px)}.overlay .modal .close,.overlay .rouletteModal .close{margin:-8px -8px -30px 0}}
+
+.resultsPage .hero{padding:22px 5vw 14px}
+.resultsPage .hero h1{font-size:clamp(25px,3.5vw,38px);line-height:1.12;margin:6px auto 18px}
+.resultsPage .hero>p:first-of-type,.resultsPage .heroHint,.resultsPage .budgetPresets,.resultsPage .trust{display:none}
+.resultsPage .dates{margin-top:10px}.resultsPage .demoDisclosure{margin:9px auto!important}
+.resultsPage .vibes{margin-top:10px}.resultsPage .surprise{margin-top:10px}
+.resultsPage .results{padding-top:22px}
+.resultsPage .resultHead{margin-bottom:18px}
+.resultsPage .resultHead h2{font-size:clamp(28px,4vw,40px)}
+.resultsPage .explain{padding:25px 5vw}.resultsPage .pendingNotice{margin:0 auto}
+@media(max-width:640px){.resultsPage .hero{padding:18px 14px 12px}.resultsPage .results{padding-top:20px}.resultsPage .demoDisclosure{font-size:10px!important}}
