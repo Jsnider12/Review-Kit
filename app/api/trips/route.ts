@@ -10,7 +10,8 @@ export async function POST(req:Request){
   const today=new Date().toISOString().slice(0,10);
   const futureDateValid=search.dateMode!=="Exact"||Boolean(search.startDate&&search.startDate>=today);
   if(!search.origin?.trim()||search.origin.length>120||!Number.isFinite(search.budget)||search.budget<100||search.budget>100000||!Number.isInteger(search.travelers)||search.travelers<1||search.travelers>20||!Number.isInteger(search.days)||search.days<1||search.days>30||!validDate||!exactDateValid||!futureDateValid){
-   return NextResponse.json({error:"Invalid trip search."},{status:400});
+   const error=!search.origin?.trim()?"Tell us where you’re leaving from.":search.origin.length>120?"Origin is too long. Try a city or airport code.":!Number.isFinite(search.budget)||search.budget<100||search.budget>100000?"Choose a trip budget between $100 and $100,000.":!Number.isInteger(search.travelers)||search.travelers<1||search.travelers>20?"Choose between 1 and 20 travelers.":!Number.isInteger(search.days)||search.days<1||search.days>30?"Choose a trip length between 1 and 30 days.":!validDate?"Use a valid start date.":!exactDateValid?"Choose a start date for an exact-date search.":!futureDateValid?"Choose a future start date.":"Check your trip details and try again.";
+   return NextResponse.json({error},{status:400});
   }
 
   const normalizedOrigin=search.origin.toLowerCase();
