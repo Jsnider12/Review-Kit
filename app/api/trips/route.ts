@@ -19,9 +19,9 @@ export async function POST(req:Request){
   // will replace this with actual origin-to-destination distance and travel time.
   const originRules:[RegExp,string][]=[
    [/\b(tx|texas)\b|houston|friendswood|webster|clear lake|pearland|league city|galveston/,"Texas"],
-   [/\b(ca|california)\b|los angeles|san diego|san francisco|sacramento|san jose/,"California"],
+   [/\b(ca|california)\b|\bla\b|los angeles|san diego|san francisco|sacramento|san jose/,"California"],
    [/\b(fl|florida)\b|miami|orlando|tampa|jacksonville|pensacola|destin/,"Florida"],
-   [/\b(la|louisiana)\b|new orleans|lafayette/,"Louisiana"],
+   [/\blouisiana\b|new orleans|lafayette|baton rouge/,"Louisiana"],
    [/\b(co|colorado)\b|denver/,"Colorado"],
    [/\b(nv|nevada)\b|las vegas/,"Nevada"],
    [/\b(ny|new york)\b|new york city|nyc/,"New York"],
