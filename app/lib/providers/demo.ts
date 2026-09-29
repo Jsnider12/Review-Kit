@@ -62,7 +62,7 @@ export function matchingDestinations(vibe?:string){
 
 const originMarket=(origin:string)=>{
  const o=origin.toLowerCase();
- if(/\\b(ca|california)\\b|los angeles|san diego|san francisco|sacramento|san jose/.test(o))return "west";
+ if(/\\b(ca|california)\\b|\\bla\\b|los angeles|san diego|san francisco|sacramento|san jose/.test(o))return "west";
  if(/\\b(fl|florida)\\b|miami|orlando|tampa|jacksonville|pensacola/.test(o))return "southeast";
  if(/\\b(ny|new york)\\b|new york city|nyc|boston|philadelphia|washington dc/.test(o))return "northeast";
  if(/chicago|\\b(il|illinois)\\b|kansas city|st louis|denver|colorado/.test(o))return "central";
