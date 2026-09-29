@@ -1,4 +1,4 @@
-export type TripSearch={origin:string;budget:number;travelers:number;days:number;vibe?:string;startDate?:string;dateMode?:"Flexible"|"Exact"};
+export type TripSearch={origin:string;budget:number;travelers:number;days:number;vibe?:string;startDate?:string;dateMode?:"Flexible"|"Exact";utcOffsetMinutes?:number};
 const addDays=(date:string,days:number)=>{const d=new Date(date+"T00:00:00Z");d.setUTCDate(d.getUTCDate()+days);return d.toISOString().slice(0,10)};
 export type OnTripCostProfile={foodPerPersonDay?:number;localPerDay?:number;activitiesPerPersonDay?:number;bufferRate?:number};
 export type InventoryQuote={provider:"demo"|"duffel"|"booking"|"expedia";kind:"flight"|"stay";destination:string;amount:number;currency:"USD";live:boolean;expiresAt?:string;startDate?:string;endDate?:string;travelers?:number;qualityScore?:number};

@@ -18,6 +18,9 @@ The planning preview uses demo estimates, not live fares or bookable inventory. 
 - A $100 search returns an actionable no-match state. Budget reduction respects the $100 minimum and cannot raise the budget.
 - New Orleans shortening was verified: $1,548 / four days became $1,189 / three days, and Undo restored the original estimate and duration. Two-day trips do not offer a further one-night reduction.
 
+- Local-date validation was tested across UTC midnight and UTC+14; exact-date searches use the traveler’s current UTC offset.
+- Saved-data checks keep valid older snapshots, discard damaged contexts or inconsistent totals, and remove duplicate or phantom saved IDs.
+
 ## Review limits
 
 Responsive layouts were tested in real browser frames, not a physical phone. Device-specific touch behavior and the iOS/Android software keyboard still require device validation. Automated assertions exercise the pricing engine and API handlers directly, rather than an HTTP server. Some destinations use the designed image fallback. The preview intentionally remains noindex until a public launch is approved.
