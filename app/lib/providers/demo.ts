@@ -1,0 +1,113 @@
+import type {DestinationDiscoveryProvider,InventoryProvider,InventoryQuote,TripSearch} from "../trip-engine";
+
+export type DestinationProfile={name:string;country:string;vibes:string[];transport:number;stay:number;tag:string;emoji:string;image:string;imageAlt:string;imageCredit?:string;imageSource?:string;discovery?:boolean;costLevel?:"value"|"standard"|"premium"|"luxury";region?:string;conceptTitle?:string;stayStyle?:string;highlights?:string[]};
+export const destinationProfiles:DestinationProfile[]=[
+{name:"New Orleans",conceptTitle:"French Quarter food + music escape",stayStyle:"Character stay near the French Quarter",highlights:["Creole food crawl","Live music evening","Historic neighborhoods"],country:"USA",vibes:["Culture","City"],transport:360,stay:438,tag:"Food + culture",emoji:"⚜️",costLevel:"value",image:"https://images.unsplash.com/photo-1519493966896-9c27a7e6f56a?auto=format&fit=crop&w=1600&q=82",imageAlt:"Travel view of New Orleans",region:"Louisiana"},
+{name:"Austin",conceptTitle:"Live music + food city weekend",stayStyle:"Walkable central Austin stay",highlights:["Live music","Texas food","Neighborhood exploring"],country:"USA",vibes:["City","Culture","Nightlife"],transport:140,stay:480,tag:"Food + live music",emoji:"🎵",image:"",imageAlt:"Travel view of Austin",region:"Texas"},
+{name:"San Antonio",conceptTitle:"River Walk culture weekend",stayStyle:"Central stay near the River Walk",highlights:["River Walk evening","Historic missions","Tex-Mex dinner"],country:"USA",vibes:["Culture","City"],transport:150,stay:430,tag:"River Walk getaway",emoji:"🌮",image:"",imageAlt:"Travel view of San Antonio",region:"Texas"},
+{name:"Galveston",conceptTitle:"Easy Gulf beach reset",stayStyle:"Beachfront or Strand-area stay",highlights:["Beach morning","Historic Strand","Seafood dinner"],country:"USA",vibes:["Beach"],transport:80,stay:520,tag:"Easy Gulf escape",emoji:"🌊",image:"",imageAlt:"Travel view of Galveston",region:"Texas"},
+{name:"Corpus Christi",conceptTitle:"Texas coast + outdoors escape",stayStyle:"Comfortable coastal stay",highlights:["Gulf beach time","Bayfront exploring","Coastal outdoors"],country:"USA",vibes:["Beach","Outdoors"],transport:190,stay:470,tag:"Coast + outdoors",emoji:"☀️",image:"",imageAlt:"Travel view of Corpus Christi",region:"Texas"},
+{name:"Fredericksburg",conceptTitle:"Hill Country food + outdoors escape",stayStyle:"Charming town or countryside stay",highlights:["Main Street","Hill Country scenery","Local food + tasting"],country:"USA",vibes:["Culture","Outdoors"],transport:180,stay:560,tag:"Hill Country escape",emoji:"🌿",image:"",imageAlt:"Travel view of Fredericksburg",region:"Texas"},
+{name:"Dallas",conceptTitle:"Big-city food + culture weekend",stayStyle:"Well-located city hotel",highlights:["Neighborhood dining","Arts district","City night out"],country:"USA",vibes:["City","Culture"],transport:180,stay:460,tag:"Food + city weekend",emoji:"🏙️",image:"",imageAlt:"Travel view of Dallas",region:"Texas"},
+{name:"Lafayette",conceptTitle:"Cajun country food + music escape",stayStyle:"Local stay near downtown",highlights:["Cajun food","Live music","Acadiana culture"],country:"USA",vibes:["Culture"],transport:170,stay:390,tag:"Cajun country",emoji:"⚜️",discovery:true,costLevel:"value",image:"",imageAlt:"Travel view of Lafayette",region:"Louisiana"},
+{name:"Hot Springs",conceptTitle:"Thermal baths + mountain-town reset",stayStyle:"Historic or nature-adjacent stay",highlights:["Bathhouse Row","Thermal soak","Mountain trails"],country:"USA",vibes:["Outdoors","Culture"],transport:230,stay:430,tag:"Spa + mountain town",emoji:"♨️",discovery:true,costLevel:"value",image:"",imageAlt:"Travel view of Hot Springs",region:"Arkansas"},
+{name:"Pensacola",conceptTitle:"White-sand Gulf beach escape",stayStyle:"Beach-area stay",highlights:["White-sand beach","Gulf seafood","Sunset by the water"],country:"USA",vibes:["Beach"],transport:330,stay:570,tag:"White-sand Gulf",emoji:"🏖️",image:"",imageAlt:"Travel view of Pensacola",region:"Florida"},
+{name:"Kansas City",conceptTitle:"Barbecue + neighborhoods city break",stayStyle:"Central city stay",highlights:["Barbecue crawl","Jazz evening","Neighborhood exploring"],country:"USA",vibes:["City","Culture"],transport:330,stay:450,tag:"Barbecue + neighborhoods",emoji:"🎷",discovery:true,costLevel:"value",image:"",imageAlt:"Travel view of Kansas City",region:"Missouri"},
+{name:"Memphis",conceptTitle:"Music + barbecue weekend",stayStyle:"Downtown or Midtown stay",highlights:["Live music","Memphis barbecue","Civil rights history"],country:"USA",vibes:["Culture","Nightlife"],transport:320,stay:420,tag:"Music + barbecue",emoji:"🎶",costLevel:"value",image:"",imageAlt:"Beale Street at night in Memphis",region:"Tennessee"},
+{name:"Tulum",conceptTitle:"Caribbean ruins + beach escape",stayStyle:"Relaxed stay near the coast",highlights:["Maya ruins","Beach time","Cenote day"],country:"Mexico",vibes:["Beach","Culture"],transport:560,stay:620,tag:"Caribbean + ruins",emoji:"🌴",image:"",imageAlt:"Travel view of Tulum"},
+{name:"Mérida",conceptTitle:"Yucatán culture escape",stayStyle:"Boutique stay near Centro",highlights:["Local markets + food","Historic center","Easy day-trip potential"],country:"Mexico",vibes:["Culture","City"],transport:520,stay:430,tag:"Yucatán culture",emoji:"🌺",discovery:true,costLevel:"value",image:"https://images.unsplash.com/photo-1606971220186-e18b2425247b?auto=format&fit=crop&w=1200&q=80",imageAlt:"Traditional Yucatecan dancers in Mérida, Mexico",imageCredit:"Alan Morales",imageSource:"https://unsplash.com/@alanmoraales"},
+{name:"Cancún",conceptTitle:"Caribbean beach reset",stayStyle:"Resort-style stay near the water",highlights:["Beach day","Caribbean water","Easy resort downtime"],country:"Mexico",vibes:["Beach"],transport:520,stay:690,tag:"Caribbean escape",emoji:"🌴",image:"https://images.unsplash.com/photo-1552074284-5e88ef1aef18?auto=format&fit=crop&w=1600&q=82",imageAlt:"Travel view of Cancún"},
+{name:"Denver",conceptTitle:"Mountains + city adventure",stayStyle:"City base with easy mountain access",highlights:["Mountain day","Craft food + drink","City neighborhoods"],country:"USA",vibes:["Adventure","City"],transport:410,stay:585,tag:"Mountains + city",emoji:"🏔️",image:"https://images.unsplash.com/photo-1619856699906-09e1f58c98b1?auto=format&fit=crop&w=1600&q=82",imageAlt:"Travel view of Denver",region:"Colorado"},
+{name:"Big Bend",conceptTitle:"Desert skies road-trip adventure",stayStyle:"Park-area lodge or cabin",highlights:["Desert hiking","Scenic drives","Dark-sky night"],country:"USA",vibes:["Outdoors","Adventure"],transport:240,stay:520,tag:"Desert road trip",emoji:"🌵",image:"https://images.unsplash.com/photo-1592190057402-2bf1ee02118d?auto=format&fit=crop&w=1600&q=82",imageAlt:"Travel view of Big Bend",region:"Texas"},
+{name:"San Juan",conceptTitle:"Old San Juan + beach escape",stayStyle:"Stay near Old San Juan or the beach",highlights:["Old city streets","Beach afternoon","Puerto Rican food"],country:"Puerto Rico",vibes:["Beach","Culture"],transport:650,stay:760,tag:"Island + old city",emoji:"🌊",image:"",imageAlt:"Travel view of San Juan",region:"Puerto Rico"},
+{name:"Nashville",conceptTitle:"Live music city weekend",stayStyle:"Stay near the music districts",highlights:["Live music","Southern food","Neighborhood night out"],country:"USA",vibes:["Culture","Nightlife"],transport:365,stay:510,tag:"Music weekend",emoji:"🎸",image:"",imageAlt:"Travel view of Nashville",region:"Tennessee"},
+{name:"Destin",conceptTitle:"White-sand Gulf reset",stayStyle:"Beach-focused coastal stay",highlights:["White-sand beach","Gulf sunset","Easy water day"],country:"USA",vibes:["Beach"],transport:310,stay:760,tag:"Gulf beach",emoji:"☀️",image:"",imageAlt:"White-sand beach and Gulf water in Destin",region:"Florida"},
+{name:"Las Vegas",conceptTitle:"Desert entertainment escape",stayStyle:"Resort stay near the action",highlights:["Standout show","Pool or spa time","Desert or dining experience"],country:"USA",vibes:["Nightlife","City"],transport:390,stay:590,tag:"Entertainment",emoji:"🎲",image:"https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1600&q=82",imageAlt:"Travel view of Las Vegas",region:"Nevada"},
+{name:"Mexico City",conceptTitle:"Food, design + neighborhood weekend",stayStyle:"Design-forward stay in a walkable neighborhood",highlights:["Standout food","Museums + design","Neighborhood exploring"],country:"Mexico",vibes:["Culture","City"],transport:490,stay:540,tag:"Food + design",emoji:"🌮",image:"",imageAlt:"Travel view of Mexico City"},
+{name:"Guanacaste",conceptTitle:"Costa Rica beach + adventure escape",stayStyle:"Relaxed coastal stay",highlights:["Pacific beach time","Wildlife + nature","Adventure day"],country:"Costa Rica",vibes:["Beach","Adventure"],transport:720,stay:820,tag:"Beach + adventure",emoji:"🦥",image:"",imageAlt:"Travel view of Guanacaste"},
+{name:"San Diego",conceptTitle:"Coast + neighborhood escape",stayStyle:"Coastal stay with city access",highlights:["Pacific beaches","Neighborhood food","Waterfront exploring"],country:"USA",vibes:["Beach","City"],transport:520,stay:880,tag:"Coast + city",emoji:"🌅",image:"",imageAlt:"Travel view of San Diego",region:"California"},
+{name:"Great Smoky Mountains",conceptTitle:"Cabin + mountain reset",stayStyle:"Cabin-style mountain stay",highlights:["Scenic trails","Cabin downtime","Mountain drive"],country:"USA",vibes:["Outdoors","Adventure"],transport:280,stay:690,tag:"Cabin + outdoors",emoji:"🌲",image:"https://images.unsplash.com/photo-1666830570986-8fef84e00a57?auto=format&fit=crop&w=1200&q=80",imageAlt:"Layered mountain ridges in Great Smoky Mountains National Park",imageCredit:"Jason Hawke",imageSource:"https://unsplash.com/@jfhawke",region:"Tennessee"},
+{name:"New York City",conceptTitle:"Big-city food + culture trip",stayStyle:"Well-located city stay",highlights:["Neighborhood food","Major museum","Iconic city walk"],country:"USA",vibes:["City","Culture"],transport:560,stay:1120,tag:"Big city energy",emoji:"🗽",image:"",imageAlt:"Travel view of New York City",region:"New York"},
+{name:"Chicago",conceptTitle:"Architecture + food weekend",stayStyle:"Central city stay",highlights:["Architecture cruise","Chicago food","Lakefront walk"],country:"USA",vibes:["City","Culture"],transport:420,stay:720,tag:"Food + architecture",emoji:"🏙️",image:"https://images.unsplash.com/photo-1493134799591-2c9eed26201a?auto=format&fit=crop&w=1600&q=82",imageAlt:"Travel view of Chicago",region:"Illinois"},
+{name:"Maui",conceptTitle:"Hawaiian beach + island adventure",stayStyle:"Resort or condo-style island stay",highlights:["Beach day","Road-trip scenery","Island food"],country:"USA",vibes:["Beach","Adventure"],transport:1450,stay:1850,tag:"Hawaiian escape",emoji:"🌺",image:"",imageAlt:"Travel view of Maui",region:"Hawaii"},
+{name:"Aruba",conceptTitle:"Caribbean beach + easy island escape",stayStyle:"Resort or boutique beach stay",highlights:["Beach days","Island exploring","Sunset dinner"],country:"Aruba",vibes:["Beach"],transport:1180,stay:1760,tag:"One happy island",emoji:"🏝️",image:"",imageAlt:"Travel view of Aruba"},
+{name:"Belize",conceptTitle:"Reef + rainforest adventure",stayStyle:"Comfortable coastal or jungle base",highlights:["Barrier reef day","Rainforest adventure","Local food"],country:"Belize",vibes:["Beach","Adventure"],transport:980,stay:1420,tag:"Reef + rainforest",emoji:"🐠",image:"",imageAlt:"Travel view of Belize"},
+{name:"Vancouver",conceptTitle:"City + wild coast escape",stayStyle:"Central stay near waterfront neighborhoods",highlights:["Waterfront exploring","Mountain or forest day","Food neighborhoods"],country:"Canada",vibes:["City","Outdoors"],transport:920,stay:1380,tag:"City + wild coast",emoji:"🏔️",image:"",imageAlt:"Vancouver skyline with mountains and waterfront"},
+{name:"London",conceptTitle:"London culture + neighborhood trip",stayStyle:"Transit-friendly central stay",highlights:["Markets + food","Major sights","Neighborhood exploring"],country:"United Kingdom",vibes:["City","Culture"],transport:1580,stay:1640,tag:"Classic city escape",emoji:"🇬🇧",image:"https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1600&q=82",imageAlt:"Travel view of London"},
+{name:"Paris",conceptTitle:"Paris neighborhoods + food trip",stayStyle:"Walkable Paris stay",highlights:["Neighborhood cafés","Major museum","Seine evening"],country:"France",vibes:["City","Culture"],transport:1660,stay:1720,tag:"Food + iconic streets",emoji:"🇫🇷",image:"https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1600&q=82",imageAlt:"Travel view of Paris"},
+{name:"Rome",conceptTitle:"Ancient Rome + food escape",stayStyle:"Central historic-city stay",highlights:["Ancient sites","Roman food","Evening piazzas"],country:"Italy",vibes:["Culture","City"],transport:1720,stay:1540,tag:"History + food",emoji:"🇮🇹",image:"https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=1600&q=82",imageAlt:"Travel view of Rome"},
+{name:"Reykjavík",conceptTitle:"Iceland fire + ice escape",stayStyle:"Reykjavík base with excursion access",highlights:["Waterfalls + landscapes","Geothermal experience","Icelandic food"],country:"Iceland",vibes:["Adventure","Outdoors"],transport:1420,stay:1480,tag:"Fire + ice",emoji:"🇮🇸",image:"",imageAlt:"Travel view of Reykjavík"},
+{name:"Bora Bora",conceptTitle:"Overwater luxury escape",stayStyle:"Premium lagoon or overwater stay",highlights:["Lagoon day","Reef experience","Private resort downtime"],country:"French Polynesia",vibes:["Beach"],transport:4200,stay:6200,tag:"Overwater escape",emoji:"🌊",costLevel:"luxury",image:"",imageAlt:"Travel view of Bora Bora"},
+{name:"Maldives",conceptTitle:"Private-island once-in-a-lifetime escape",stayStyle:"Premium island resort",highlights:["Lagoon time","Reef experience","Private-island relaxation"],country:"Maldives",vibes:["Beach"],transport:3900,stay:5900,tag:"Private island retreat",emoji:"🏝️",costLevel:"luxury",image:"",imageAlt:"Travel view of Maldives"},
+{name:"Tokyo",conceptTitle:"Tokyo food + discovery trip",stayStyle:"Transit-friendly city stay",highlights:["Neighborhood exploring","Japanese food","Culture + design"],country:"Japan",vibes:["City","Culture"],transport:2400,stay:2500,tag:"Food + discovery",emoji:"🗼",image:"https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=1600&q=82",imageAlt:"Travel view of Tokyo"},
+{name:"Amalfi Coast",conceptTitle:"Italian coast + village escape",stayStyle:"Scenic coastal stay",highlights:["Coastal villages","Italian food","Boat or viewpoint day"],country:"Italy",vibes:["Beach","Culture"],transport:2500,stay:3900,tag:"Italian coast",emoji:"🍋",image:"",imageAlt:"Travel view of Amalfi Coast"},
+{name:"Swiss Alps",conceptTitle:"Alpine scenery + mountain adventure",stayStyle:"Scenic mountain-town stay",highlights:["Mountain railway","Alpine trails","Village exploring"],country:"Switzerland",vibes:["Outdoors","Adventure"],transport:2600,stay:4100,tag:"Alpine escape",emoji:"🏔️",costLevel:"premium",image:"",imageAlt:"Travel view of Swiss Alps"},
+{name:"Madeira",conceptTitle:"Atlantic island adventure",stayStyle:"Scenic island base",highlights:["Levada landscapes","Coastal viewpoints","Mountain day"],country:"Portugal",vibes:["Outdoors","Adventure"],transport:1750,stay:1320,tag:"Atlantic island escape",emoji:"🌿",discovery:true,image:"",imageAlt:"Travel view of Madeira"},
+{name:"São Miguel",conceptTitle:"Azores volcano + hot-spring adventure",stayStyle:"Island base for scenic day trips",highlights:["Crater lakes","Thermal pools","Atlantic viewpoints"],country:"Azores, Portugal",vibes:["Outdoors","Adventure"],transport:1680,stay:1180,tag:"Volcanic island",emoji:"🌋",discovery:true,image:"",imageAlt:"Travel view of São Miguel"},
+{name:"Ljubljana",conceptTitle:"Old town + Alps discovery trip",stayStyle:"Walkable old-town stay",highlights:["Ljubljana old town","Local food","Alpine day trip"],country:"Slovenia",vibes:["Culture","Outdoors"],transport:1820,stay:980,tag:"Alps + old town",emoji:"🏞️",discovery:true,image:"",imageAlt:"Travel view of Ljubljana"},
+{name:"Cartagena",conceptTitle:"Caribbean color + old-city escape",stayStyle:"Boutique stay near the walled city",highlights:["Old city","Caribbean food","Island or beach day"],country:"Colombia",vibes:["Beach","Culture"],transport:980,stay:1050,tag:"Caribbean color",emoji:"🌺",discovery:true,image:"",imageAlt:"Travel view of Cartagena"},
+{name:"Antigua",conceptTitle:"Volcano + colonial city escape",stayStyle:"Boutique stay in the historic center",highlights:["Colonial streets","Volcano views","Coffee + local food"],country:"Guatemala",vibes:["Culture","Adventure"],transport:760,stay:820,tag:"Volcano + colonial city",emoji:"🌋",discovery:true,image:"",imageAlt:"Travel view of Antigua"},
+{name:"Québec City",conceptTitle:"Old-world food + culture weekend",stayStyle:"Walkable stay near Old Québec",highlights:["Historic streets","Québécois food","Riverfront exploring"],country:"Canada",vibes:["Culture","City"],transport:980,stay:1120,tag:"Old-world weekend",emoji:"🏰",discovery:true,image:"",imageAlt:"Travel view of Québec City"},
+{name:"Curaçao",conceptTitle:"Colorful Caribbean island escape",stayStyle:"Beach-oriented island stay",highlights:["Cove beach","Willemstad streets","Island day"],country:"Curaçao",vibes:["Beach","Culture"],transport:1280,stay:1480,tag:"Colorful Caribbean",emoji:"🐚",discovery:true,image:"",imageAlt:"Travel view of Curaçao"},
+{name:"Oaxaca",conceptTitle:"Food + culture escape",stayStyle:"Boutique stay near Centro",highlights:["Oaxacan food","Markets + craft","Historic streets"],country:"Mexico",vibes:["Culture","City"],transport:820,stay:720,tag:"Food + mezcal country",emoji:"🌵",discovery:true,costLevel:"value",image:"https://images.unsplash.com/photo-1594530070128-b4022cfb32b1?auto=format&fit=crop&w=1200&q=80",imageAlt:"Santo Domingo church in Oaxaca, Mexico",imageCredit:"Alex Gutiérrez",imageSource:"https://unsplash.com/@alex_mtz_gtz"}
+];
+
+/**
+ * Prototype catalog only. Production discovery must come from broad supplier /
+ * geographic inventory; this list exists to exercise ranking and UX safely.
+ */
+export function matchingDestinations(vibe?:string){
+ return destinationProfiles.filter(d=>!vibe||vibe==="Any"||d.vibes.includes(vibe));
+}
+
+const originMarket=(origin:string)=>{
+ const o=origin.toLowerCase();
+ if(/\b(ca|california)\b|\bla\b|los angeles|san diego|san francisco|sacramento|san jose|seattle|portland|oregon/.test(o))return "west";
+ if(/\b(fl|florida)\b|miami|orlando|tampa|jacksonville|pensacola/.test(o))return "southeast";
+ if(/\b(ny|new york)\b|new york city|nyc|boston|philadelphia|washington dc/.test(o))return "northeast";
+ if(/chicago|\b(il|illinois)\b|kansas city|st louis|denver|colorado/.test(o))return "central";
+ if(/houston|austin|dallas|san antonio|texas|new orleans|louisiana|friendswood|galveston/.test(o))return "gulf";
+ return "unknown";
+};
+const destinationMarket=(p:DestinationProfile)=>{
+ if(["California","Nevada","Hawaii"].includes(p.region||""))return "west";
+ if(["Florida","Tennessee","Puerto Rico"].includes(p.region||""))return "southeast";
+ if(["New York"].includes(p.region||"")||["UK","United Kingdom","France","Italy","Portugal","Iceland","Switzerland","Slovenia"].includes(p.country))return "northeast";
+ if(["Illinois","Missouri","Colorado","Arkansas"].includes(p.region||""))return "central";
+ if(["Mexico","Belize","Costa Rica","Guatemala","Colombia","Curaçao","Aruba"].includes(p.country))return "gulf";
+ return "gulf";
+};
+const originAdjustedTransport=(p:DestinationProfile,origin:string)=>{
+ const from=originMarket(origin),to=destinationMarket(p);
+ if(from===to)return Math.round(p.transport*.72);
+ const factors:Record<string,number>={"gulf:west":1.28,"west:gulf":1.28,"gulf:northeast":1.18,"northeast:gulf":1.12,"west:northeast":1.38,"northeast:west":1.38,"west:southeast":1.42,"southeast:west":1.42,"southeast:northeast":1.08,"northeast:southeast":1.08,"central:west":1.14,"west:central":1.14,"central:northeast":1.08,"northeast:central":1.08,"central:southeast":1.08,"southeast:central":1.08};
+ return Math.round(p.transport*(factors[`${from}:${to}`]??1));
+};
+
+export const demoDiscoveryProvider:DestinationDiscoveryProvider={
+ async discover(search:TripSearch){
+  return matchingDestinations(search.vibe).map(d=>({name:d.name,country:d.country,region:d.region,vibes:d.vibes}));
+ }
+};
+
+export const demoProvider:InventoryProvider={
+ async searchFlights(search:TripSearch,names:string[]){
+  return destinationProfiles.filter(d=>names.includes(d.name)).map(d=>({
+   provider:"demo",kind:"flight",destination:d.name,amount:Math.round(originAdjustedTransport(d,search.origin)*(search.travelers/2)),currency:"USD",live:false
+  } satisfies InventoryQuote));
+ },
+ async searchStays(search:TripSearch,names:string[]){
+  return destinationProfiles.filter(d=>names.includes(d.name)).map(d=>({
+   provider:"demo",kind:"stay",destination:d.name,
+   amount:Math.round(d.stay*(Math.max(1,search.days-1)/3)*Math.max(1,Math.ceil(search.travelers/2)*.88)),
+   currency:"USD",live:false
+  } satisfies InventoryQuote));
+ }
+};
+export function onTripCosts(profile:DestinationProfile){
+ const level=profile.costLevel??"standard";
+ if(level==="value")return {foodPerPersonDay:42,localPerDay:28,activitiesPerPersonDay:36,bufferRate:.08};
+ if(level==="premium")return {foodPerPersonDay:78,localPerDay:58,activitiesPerPersonDay:70,bufferRate:.1};
+ if(level==="luxury")return {foodPerPersonDay:115,localPerDay:85,activitiesPerPersonDay:110,bufferRate:.12};
+ return {foodPerPersonDay:55,localPerDay:38,activitiesPerPersonDay:45,bufferRate:.08};
+}

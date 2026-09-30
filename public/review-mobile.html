@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Roamwithin responsive review</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#e9edf5;color:#17202a;font:16px Arial,sans-serif}main{max-width:1100px;margin:auto;padding:24px}h1{font-size:24px;margin:0 0 10px}p{line-height:1.5;color:#526159}nav{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}button,a{min-height:44px;border:1px solid #aab8cf;border-radius:8px;background:#fff;color:#2447cc;font:inherit;padding:10px 14px;cursor:pointer}button[aria-pressed=true]{background:#315cff;color:#fff}button:focus-visible,a:focus-visible{outline:3px solid #ff6b35;outline-offset:2px}.stage{overflow:auto;padding:12px 0}iframe{display:block;width:390px;height:780px;border:1px solid #bbc5d4;border-radius:16px;background:#fff;box-shadow:0 12px 40px #17202a18}a{display:inline-block;text-decoration:none}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Roamwithin responsive review</h1>
+    <p>This review frame renders the real website at a selected width. It checks responsive layout; it does not emulate a physical device or its keyboard.</p>
+    <nav aria-label="Review width">
+      <button type="button" data-width="320" aria-pressed="false">320px</button>
+      <button type="button" data-width="390" aria-pressed="true">390px</button>
+      <button type="button" data-width="768" aria-pressed="false">768px</button>
+    </nav>
+    <nav aria-label="Review page">
+      <button type="button" data-page="results" aria-pressed="true">Results</button>
+      <button type="button" data-page="home" aria-pressed="false">Home</button>
+      <a href="/">Open full website</a>
+    </nav>
+    <div class="stage"><iframe title="Roamwithin phone-sized review" src="/results?origin=Houston%2C+Texas&amp;budget=2500&amp;travelers=2&amp;days=4&amp;vibe=Any&amp;dateMode=Flexible"></iframe></div>
+  </main>
+  <script>
+    const frame=document.querySelector('iframe');
+    document.querySelectorAll('[data-width]').forEach(button=>button.addEventListener('click',()=>{frame.style.width=button.dataset.width+'px';document.querySelectorAll('[data-width]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)))}));
+    document.querySelectorAll('[data-page]').forEach(button=>button.addEventListener('click',()=>{frame.src=button.dataset.page==='home'?'/':'/results?origin=Houston%2C+Texas&budget=2500&travelers=2&days=4&vibe=Any&dateMode=Flexible';document.querySelectorAll('[data-page]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)))}));
+  </script>
+</body>
+</html>

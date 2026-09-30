@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:v1": "node scripts/check-v1.cjs"
   },
   "dependencies": {
     "next": "15.5.9",
